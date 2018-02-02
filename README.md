@@ -8,3 +8,5 @@ In this Python version
 - use them to initialize the SRW code to generate wavefronts up to the sample point
 
 Notes: need to define otpical beamlines, start with I13d
+
+cippolo
