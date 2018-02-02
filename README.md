@@ -6,3 +6,5 @@ In this Python version
 - we use an external call to ELEGANT to determine the linear optics of a machine
 - then we isolate the Twiss parameter ata sepecific ID position
 - use them to initialize the SRW code to generate wavefronts up to the sample point
+
+Notes: need to define otpical beamlines, start with I13d
