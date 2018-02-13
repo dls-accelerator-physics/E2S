@@ -1,4 +1,4 @@
-E2S : electron to sample
+E2S : Electron to Sample
 this project is meant to bridge the gap between AP codes (elegant, AT, ...) used to describe a LATTICE and the
 radiation seen in a BEAMLINE
 
