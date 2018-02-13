@@ -21,8 +21,8 @@ end
 
 
 addpath /home/xph53246/elegant/elegant2matlab/
-addpath /home/xph53246/matlabscripts/
-addpath /home/xph53246/matlabscripts/general
+addpath(genpath('/home/xph53246/matlabscripts/'))
+% addpath /home/xph53246/matlabscripts/general
 setpathelegant
 
 %twi.filename = 'andriEx'; 
