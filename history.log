@@ -1,0 +1,1000 @@
+   15  python 04_collimated_LT.py 
+   16  python 05_convergent_BT.py 
+   17  python 06_convergent_LT.py 
+   18  python 07_convergent_LT_slit.py 
+   19  python 08_convergent_LT_bent.py 
+   20  ls
+   21  ls *py
+   22  python 09_convergent_LT_bentSph.py 
+   23  ls *py
+   24  cd ../06_AnalyzerBent1D/
+   25  ls *py
+   26  python 01B_SourceZCrystalThetaAlpha.py 
+   27  python 01L_SourceZCrystalThetaAlpha.py 
+   28  ls *py
+   29  python 02_vonHamosElliptical.py 
+   30  python 02_vonHamos.py 
+   31  ls *py
+   32  python flux-dE.py 
+   33  python vonHamosPos.py 
+   34  cd ../07_AnalyzerBent2D/
+   35  ls
+   36  python 01BD_SourceZCrystalThetaAlpha.py 
+   37  pwd
+   38  mpi4py
+   39  ls
+   40  ls *py
+   41  pwd
+   42  grep mpi4py *.py
+   43  grep a *.py
+   44  cd ..
+   45  ls
+   46  cd 13_Warping/
+   47  grep mpi4py *.py
+   48  grep mpi *.py
+   49  cd ../
+   50  ls
+   51  cd withRaycing/
+   52  ls
+   53  cd 01_SynchrotronSources/; grep mpi *.py; cd ..
+   54  cd 02_*; grep mpi *.py; cd ..
+   55  cd 03_*; grep mpi *.py; cd ..
+   56  cd 04_*; grep mpi *.py; cd ..
+   57  cd 05_*; grep mpi *.py; cd ..
+   58  cd 05_*; grep m *.py; cd ..
+   59  cd 06_*; grep mpi *.py; cd ..
+   60  cd 07_*; grep mpi *.py; cd ..
+   61  cd 08_*; grep mpi *.py; cd ..
+   62  cd 09_*; grep mpi *.py; cd ..
+   63  cd 10_*; grep mpi *.py; cd ..
+   64  cd 11_*; grep mpi *.py; cd ..
+   65  cd 12_*; grep mpi *.py; cd ..
+   66  cd 13_*; grep mpi *.py; cd ..
+   67  cd 14_*; grep mpi *.py; cd ..
+   68  cd 15_*; grep mpi *.py; cd ..
+   69  ls
+   70  which mpiexec 
+   71  exit
+   72  echo $PATH
+   73  xop
+   74  module load xop
+   75  xop&
+   76  which dls-python
+   77  bg
+   78  ls *xop
+   79  rm urgent.*
+   80  exit
+   81  cd /dls/physics/xph53246/
+   82  ls 
+   83  ll 
+   84  cd source_to_beamline/
+   85  ls
+   86  cd SRW_Dev/
+   87  pwd
+   88  ls
+   89  cd env/
+   90  ls
+   91  cd work/
+   92  ls
+   93  cd SRW_PROJECT/
+   94  ls
+   95  cd MyBeamline/
+   96  ls
+   97  cd  data_example_08/
+   98  ls
+   99  python
+  100  cd /dls/physics/xph53246/
+  101  ls
+  102  cd SRW_Project/
+  103  ls
+  104  cd ../
+  105  ls
+  106  cd DIAMONDII
+  107  ls
+  108  cd beamlines/
+  109  ls
+  110  cd I13/
+  111  ls
+  112  cd ../../../
+  113  find ./ -name spectra'*'
+  114  cd test/TRANSPARENT_REALIGNMENT/
+  115  ls
+  116  cd spectra10.0/
+  117  ls
+  118  ./spectra
+  119  ls
+  120  pwd
+  121  python
+  122  module load python/ana
+  123  ./spectra
+  124  ls /lib64/
+  125  ./spectra
+  126  which spectra
+  127  cd /dls/physics/xph53246/DIAMONDII/
+  128  ls
+  129  pwd
+  130  cd ../
+  131  find ./ -name SRWLIB'*'
+  132  top
+  133  pwd
+  134  ssh xph53246@cs-sc-serv-07
+  135  ssh xph53246@cs-sc-serv-01
+  136  ssh xph53246@sc-serv-07
+  137  ssh xph53246@sc-serv-01
+  138  pwd
+  139  more ~/.bashrc_local
+  140  more ~/.bashrc_user
+  141  ssh xph53246@cs04t-sc-serv-07
+  142  ssh xph53246@cs04t-sc-serv-04
+  143  ssh xph53246@cs04r-sc-serv-04
+  144  more ~/.bashrc_user
+  145  ssh -X cs04r-sc-serv-04
+  146  ssh -X cs04r-sc-serv-01
+  147  ssh -X cs07r-sc-serv-01
+  148  ssh -X cs05r-sc-serv-01
+  149  ssh -X cs05r-sc-serv-07
+  150  ssh -X cs06r-sc-serv-07
+  151  ls
+  152  find ./ -name SRWLIB'*'I13'*'
+  153  cd /dls/physics/xph53246/
+  154  ls
+  155  cd source_to_beamline/
+  156  ls
+  157  cd SRW_Dev/
+  158  ls
+  159  cd env/
+  160  ls
+  161  cd work/
+  162  ls
+  163  cd SRW_PROJECT/
+  164  cd MyBeamline/
+  165  ls
+  166  cd data_example_08
+  167  module load python/ana
+  168  python read_output)
+  169  python read_output_2.py 
+  170  cd ../
+  171  ls
+  172  emacs SRWLIB_I13.py 
+  173  bg
+  174  history 
+  175  history  | grep mpi
+  176  python SRWLIB_Example08.py 
+  177  mpiexec -50 python SRWLIB_Example08.py 
+  178  python SRWLIB_Example08.py 
+  179  mpiexec -n 50 python SRWLIB_Example08.py 
+  180  pwd
+  181  python SRWLIB_I13.py 
+  182  cp SRWLIB_Example08.py  SRWLIB_I13.py 
+  183  python SRWLIB_I13.py 
+  184  date; python SRWLIB_I13.py; date  
+  185  mpiexec -n 50 python SRWLIB_Example08.py  
+  186  mpiexec -n 50 python SRWLIB_I13.py 
+  187  more srw_mpi.log 
+  188    qsub -q ap-medium.q -l redhat_release=rhel6 -sync y -pe openmpi 5 -l infiniband /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py  
+  189  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y -pe mpiexec 5 -l infiniband /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py  
+  190  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y -pe mpiexec -n 5 -l infiniband /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py  
+  191  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y -pe mpiexec -n 5  /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py  
+  192  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y -pe 'mpiexec -n 5'  /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py  
+  193  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y -pe 'mpiexec -n 5 /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py'  
+  194  qsub
+  195  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y 'mpiexec -n 5 /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py'  
+  196  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y mpiexec -n 5 /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py
+  197  which mpiexec 
+  198  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y /dls_sw/apps/python/anaconda/1.7.0/64/bin/mpiexec  -n 5 /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py
+  199  mpiexec -n 50 python SRWLIB_I13.py 
+  200  pwd
+  201  python SRWLIB_I13.py 
+  202  optDrift = SRWLOptD(2.0) #Drift space
+  203  qsub –b y -q ap-medium.q -l redhat_release=rhel6 -sync y –pe   /dls_sw/apps/python/anaconda/1.7.0/64/bin/mpiexec –n 5   -l infiniband /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py 
+  204  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y –pe   /dls_sw/apps/python/anaconda/1.7.0/64/bin/mpiexec –n 5   -l infiniband -b y /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRWLIB_I13.py 
+  205  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y –pe   /dls_sw/apps/python/anaconda/1.7.0/64/bin/mpiexec –n 5   -l infiniband -b y python SRWLIB_I13.py 
+  206  qsub -q ap-medium.q -l redhat_release=rhel6 -sync y –pe mpiexec –n 5   -l infiniband -b y python SRWLIB_I13.py 
+  207  qsub -q ap-medium.q -l redhat_release=rhel6 –pe mpiexec –n 5   -l infiniband -b y python SRWLIB_I13.py 
+  208  qsub -q ap-medium.q -l redhat_release=rhel6 –pe -b y mpiexec –n 5 -l infiniband -b y python SRWLIB_I13.py 
+  209  qsub -q ap-medium.q -l redhat_release=rhel6 –pe -b y mpiexec –n 5 -l infiniband python SRWLIB_I13.py 
+  210  mpiexec -n 50 python SRWLIB_I13.py 
+  211  python SRWLIB_I13.py 
+  212  cd /dls/physics/students/
+  213  ls
+  214  finger qvi61384/
+  215  finger qvi61384
+  216  cd qvi61384/
+  217  ls
+  218  cd PSO_trial/
+  219  ls
+  220  ls -l 
+  221  cd ../
+  222  cp -r PSO_trial/ /dls/physics/xph53246/.
+  223  cd 
+  224  cd /dls/physics/xph53246/PSO_trial/
+  225  ls
+  226  more test_anim 
+  227       python test_anim
+  228  ls
+  229  python MOPSO_trial.py
+  230  ls
+  231  python PSO.py 
+  232  python Rastrigin.py
+  233  more test_script.py 
+  234  ls
+  235  display Rastrign3d.png 
+  236  display Rastrigin.png 
+  237  more OUTPUT/
+  238  ls OUTPUT/
+  239  ls
+  240  more PSO.py 
+  241  dls-python PSO.py 
+  242  python
+  243  dls-python
+  244  module load python/ana
+  245  python PSO.py 
+  246  ls
+  247  more test_anim 
+  248  python test_anim 
+  249  ls
+  250  python test_script.py 
+  251  ls
+  252  python Rastrigin.py 
+  253  python MOPSO_trial.py
+  254  python PSO.py 
+  255  emacs PSO.py 
+  256  bg
+  257  python PSO.py 
+  258  python
+  259  python PSO.py 
+  260  cd /dls/physics/xph53246/SR_CODES/COMSYL/SRW/cpp/gcc
+  261  ls
+  262  cd ../../
+  263  cd ../
+  264  ls
+  265  mkdir OASYS_ENV
+  266  cd OASYS_ENV/
+  267  source conda info -e
+  268  conda info -e
+  269  which conda
+  270  module load conda
+  271  python
+  272  module load python/ana
+  273  which conda
+  274  conda info -e
+  275  ls ~
+  276  cd ..
+  277  git clone https://github.com/srio/oasys-installation-scripts OASYS_ENV 
+  278  cd OASYS_ENV/Release\ 1.0/
+  279  source activate /dls/physics/xph53246/SR_CODES/COMSYL/envs/comsyl1env 
+  280  ls
+  281  ./prepare_installation.sh 
+  282  cd /dls/physics/xph53246/
+  283  rm -fr ciccio/
+  284  ls
+  285  cd MD_16012018_Kcomp/
+  286  ls
+  287  find ./ -name InkKick.m 
+  288  find ./ -name InkKick.mat 
+  289  ls
+  290  pwd
+  291  ls
+  292  pwd
+  293  cd Diamond-Light-Source-master/
+  294  ls
+  295  cd DLS-OnlineOptimiser/
+  296  cd basic/
+  297  ls
+  298  ls *py
+  299  diff dlsoo_mopso.py ../injection_control/dlsoo_mopso.py
+  300  ls 
+  301  diff dlsoo_mopso.py ../injection_control/dlsoo_mopso.py
+  302  ssh -X cs06r-sc-serv-07
+  303  cd /home/rtf26/Matlab/Online_opt/
+  304  ls
+  305  cd
+  306  pwd
+  307  cd /dls/phyx
+  308  cd /dls/physics/students/
+  309  ls
+  310  finger qvi61384/
+  311  finger qvi61384
+  312  dls-python
+  313  python
+  314  cd /dls/physics/xph53246/
+  315  mkdir MD_1234
+  316  rmdir MD_1234
+  317  mkdir MD_23012018_LT_IE_Optim/
+  318  rmdir MD_23012018_LT_IE_Optim/ 
+  319  mv ../MD_23012018_LT_IE_optim/ . 
+  320  ls
+  321  cd MD_23012018_LT_IE_optim/
+  322  ls
+  323  cd Diamond-Light-Source-master/DLS-OnlineOptimiser/injection_control/
+  324  ls
+  325  more ca_abstraction_mapping.py
+  326                cd /dls/physics/
+  327  ll
+  328  more .bashrc_user
+  329  more .bashrc
+  330  more .bashrc_user
+  331  module load python/ana
+  332  module load matlab/R2016a
+  333  matlab&
+  334  cd MD_06
+  335  cd /dls/physics/xph53246/MD_06022018_LT_IT_Optim_NOminibetaLattice/
+  336  ls
+  337  cd Diamond-Light-Source-master/DLS-OnlineOptimiser/
+  338  ls
+  339  cd injection_control/
+  340  ls
+  341  cd LT_calib/
+  342  ls
+  343  cd ../
+  344  ls
+  345  pwd
+  346  module load matlab/R2016a
+  347  matlab&
+  348  bg
+  349  cd /dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/data_example_08
+  350  cd ../../
+  351  ls
+  352   cd MyBeamline/
+  353  ls
+  354  rm runbatch.sh.*
+  355  ls
+  356  python SRWLIB_Example04.py 
+  357  python 
+  358  module load python/ana
+  359  python SRWLIB_Example04.py 
+  360  python SRWLIB_Example05.py 
+  361  python SRWLIB_Example07.py 
+  362  ls ../
+  363  cp ../SRWLIB_Example07.py   . 
+  364  python SRWLIB_Example07.py 
+  365  ls ../data_example_07/
+  366  cd ../
+  367  python SRWLIB_Example07.py  
+  368  cd data_example_07/
+  369  ls
+  370  more ex07_res_ph_dist_crl_p2.dat 
+  371  cd ../
+  372  grep field SRWLIB_Example*py 
+  373  grep Electric SRWLIB_Example*py 
+  374  grep Imaginary SRWLIB_Example*py 
+  375  grep maginary SRWLIB_Example*py 
+  376  grep Real  SRWLIB_Example*py 
+  377  grep lectric   SRWLIB_Example*py 
+  378  mo
+  379  emacs  srwlib.py
+  380  bg
+  381  cd MyBeamline/
+  382  ls
+  383  ls runbatch_Individual.sh 
+  384  qstat
+  385  pwd
+  386  qstat
+  387  pwd
+  388  ls
+  389  pwd
+  390  cd ..
+  391  ll
+  392  pwd
+  393  cd MyBeamline/
+  394  python
+  395  ls 
+  396  pwd
+  397  cd ../
+  398  cd ..
+  399  cd ../
+  400  pwd
+  401  ls
+  402  pwd 
+  403  mkdir E2S
+  404  ls
+  405  cd E2S/
+  406  mkdir LATTICE
+  407  mv LATTICE/ e2s_LATTICES
+  408  mkdir e2s_SRW/
+  409  git add e2s_LATTICES/
+  410  ls
+  411  ls -a 
+  412  git
+  413   git branch
+  414  cd ../
+  415  git init E2S/
+  416  cd E2S/
+  417  git init e2s_LATTICES/
+  418  git init e2s_SRW/
+  419  ls
+  420  cd ../
+  421  cd E2S/
+  422  ls
+  423  cd ../
+  424  ls -a 
+  425  cd E2S/
+  426  ls -a 
+  427  cd ../
+  428  git add E2S 
+  429  git init E2S
+  430  git add E2S 
+  431  ls -a 
+  432  git init E2S
+  433  ls -a 
+  434  git add E2S 
+  435  rm -fr E2S
+  436  ls
+  437  ls -a 
+  438  git help
+  439  git add E2S
+  440  mkdir E2S
+  441  git add E2S
+  442  git init  E2S
+  443  git add E2S
+  444  rmdir E2S/
+  445  rm -fr  E2S/
+  446  ls
+  447  pwd
+  448  ls
+  449  cd E2S-master/
+  450  ls
+  451  ls -a 
+  452  cd ../
+  453  ls -a 
+  454  ls
+  455  rm -fr E2S-master/
+  456  git clone git@github.com:marlibgin/E2S.git 
+  457  ls
+  458  cd E2S/
+  459  ls
+  460  ls -a 
+  461  cd ../
+  462  ls -a 
+  463  cd E2S/
+  464  ls
+  465  ls -a 
+  466  emacs README.md 
+  467  git help
+  468  git diff README.md 
+  469  git push README.md 
+  470  git add README.md 
+  471  git push README.md 
+  472  gitt diff README.md 
+  473  git diff README.md 
+  474  git pull README.md 
+  475  ls -a 
+  476  more README.md 
+  477  git diff README.md 
+  478  git help
+  479  cd ../
+  480  ls
+  481  rm -fr E2S/
+  482  git clone git@github.com:marlibgin/E2S.git 
+  483  cd E2S/
+  484  ls
+  485  git diff README.md 
+  486  ls -a 
+  487  emacs README.md 
+  488  git diff README.md 
+  489  pwd
+  490  git diff README.md 
+  491  git help
+  492  git push help
+  493  git help push
+  494  git push README.md 
+  495  git diff README.md 
+  496  git push 
+  497  git diff README.md 
+  498  git pull --rebase
+  499  git help
+  500  git status 
+  501  git commit -a README.md 
+  502  git add  README.md 
+  503  git push 
+  504  git diff README.md 
+  505  more README.md 
+  506  git diff README.md 
+  507  rm README.md 
+  508  git diff README.md 
+  509  git diff
+  510  git push
+  511  git help
+  512  git show 
+  513  ls 
+  514  git diff 
+  515  pwd
+  516  ls -a 
+  517  more .git 
+  518  ls
+  519  git help
+  520  git show 
+  521  git help
+  522  git checkout 
+  523  ls
+  524  git diff
+  525  ls
+  526  git pull
+  527  ls
+  528  ls 
+  529  git push
+  530  ls
+  531  git diff
+  532  ne 
+  533  git clone 
+  534  pwd
+  535  cd ../
+  536  rm -fr E2S/
+  537  history | grep clone 
+  538  git clone 
+  539  -
+  540  git clone https://github.com/marlibgin/E2S.git 
+  541  ls
+  542  cd E2S/
+  543  ls
+  544  git diff README.md 
+  545  ls
+  546  emacs README.md 
+  547  git diff README.md 
+  548  git add . 
+  549  ls
+  550  git show 
+  551  git commit README.md  
+  552  git commit README.md  -m "first commitment"
+  553  git push README.md  
+  554  git push origin 
+  555  git push README.md  https://github.com/marlibgin/E2S.git
+  556  git push https://github.com/marlibgin/E2S work
+  557  git push   https://github.com/marlibgin/E2S.git   work
+  558  git remote add origin  https://github.com/marlibgin/ 
+  559  git show 
+  560  git show origin
+  561  git remote set-url origin https://github.com/marlibgin/E2S.git
+  562  git remote -v 
+  563  git diff
+  564  more README.md 
+  565  history 
+  566  git commit README.md  -m "first commitment"
+  567  git push origin work 
+  568  git push origin 
+  569  emacs .git/config 
+  570  bg
+  571  git push origin 
+  572  git push origin work
+  573  git push origin 
+  574  emacs README.md 
+  575  git commit README.md  -m "second commitment"
+  576  git push origin 
+  577  git show 
+  578  git push origin master
+  579  git push origin work
+  580  git push origin master:work
+  581  emacs README.md 
+  582  git commit README.md  -m "3rd test"
+  583  git push origin master:work
+  584  ls
+  585  mkdir LATTICE
+  586  mkdir e2s_LATTICES
+  587  mkdir e2s_SRW
+  588  rmdir LATTICE/
+  589  git commit e2s_* -m "main introduce directories"
+  590  git commit e2s_LATTICES/ -m "main introduce directories"
+  591  git diff
+  592  ls 
+  593  git commit ./e2s_LATTICES/ -m "main introduce directories"
+  594  cd e2s_LATTICES/
+  595  touch foo.txt 
+  596  cd ../e2s_SRW/
+  597  touch foo.txt 
+  598  ls
+  599  cd ../
+  600  git commit ./e2s_LATTICES/ -m "main introduce directories"
+  601  git commit ./e2s_LATTICES/foo.txt -m "main introduce directories"
+  602  git commit e2s_LATTICES/foo.txt -m "main introduce directories"
+  603  git add e2s_* 
+  604  git commit e2s_LATTICES/foo.txt -m "main introduce directories"
+  605  git push origin master:work
+  606  git commit e2s_SRW/ -m "introduce main directories"
+  607  git push origin master:work
+  608  pwd
+  609  cd e2s_SRW/
+  610  pwd
+  611  ls
+  612  git commit * -m "introduce SRW files "
+  613  git add *
+  614  git commit * -m "introduce SRW files "
+  615  git push master:work 
+  616  git push origin master:work 
+  617  pwd
+  618  cd ../e2s_LATTICES/
+  619  pwd
+  620  ls
+  621  emacs VMX.ele
+  622  elegant VMX_linear.ele 
+  623  ls
+  624  rm VMX_linear.ele  VMX_linear.mag  VMX_linear.twi
+  625  elegant VMX.ele
+  626  python ../e2s_SRW/retrieve_twiss_parameters_at_location.py   VMX.twi 100
+  627  sddsplot VMX.twi -col=s,betax
+  628  sddsquery  VMX.twi
+  629  sddsprintout VMX.twi  -col=*
+  630  sddsprintout VMX.twi  -col=s
+  631  sddsprintout VMX.twi  -par=nux
+  632  ls -l VMX.twi 
+  633  more VMX.twi 
+  634  sddsprintout VMX.twi  -col=s 
+  635  sddsprintout VMX.twi  -col=s,betax 
+  636  sddsplot VMX.twi  -col=s,betax 
+  637  sddsplot VMX.twi  -par=nux
+  638  sddsprintout VMX.twi  -par=nux
+  639  elegant VMX.ele
+  640  more VMX.ele
+  641  cd ../e2s_SRW/
+  642  cd ../e2s_LATTICES/
+  643  ls
+  644  elegant VMX.ele 
+  645  sddsprintout VMX.twi  -par=nux
+  646  ls -l VMX.twi 
+  647  more VMX.ele
+  648  ls /dls/physics/im76/elegant/oneDIADvmx/
+  649  ls /dls/physics/im76/elegant/oneDIADvmx/*ele
+  650  more /dls/physics/im76/elegant/oneDIADvmx/vmx0.ele 
+  651  emacs VMX.ele
+  652  elegant VMX.ele 
+  653  sddsprintout VMX.twi  -par=nux
+  654  more /dls/physics/im76/elegant/oneDIADvmx/vmx0.ele 
+  655     emacs VMX.ele
+  656  elegant VMX.ele 
+  657  sddsprintout VMX.twi  -par=nux
+  658  emacs VMX.ele
+  659  bg
+  660  elegant VMX.ele 
+  661  rm *twi
+  662  elegant VMX.ele 
+  663  sddsprintout VMX.twi  -par=nux
+  664  python ../e2s_SRW/retrieve_twiss_parameters_at_location.py   VMX.twi 100
+  665  elegant VMX.ele 
+  666  python ../e2s_SRW/retrieve_twiss_parameters_at_location.py   VMX.twi 100
+  667  cd ../
+  668  ls
+  669  pwd
+  670  ls
+  671  python E2S.py 
+  672  emacs E2S.py 
+  673  bg
+  674  python E2S.py 
+  675  ls
+  676  python E2S.py 
+  677  elegant ./e2s_LATTICES/VMX.ele 
+  678  elegant ./e2s_LATTICES/VMX.ele ./e2s_LATTICES/VMX.lte
+  679  pwd
+  680  python E2S.py 
+  681  python
+  682  python E2S.py 
+  683  python
+  684  ls
+  685  python
+  686  python E2S.py 
+  687  ls
+  688  ls e2s_LATTICES/
+  689  ls e2s_SRW/retrieve_twiss_parameters_at_loion.py 
+  690  mv e2s_SRW/retrieve_twiss_parameters_at_location.py  e2s_LATTICES/.
+  691  python ./e2s_LATTICES/retrieve_twiss_parameters_at_location.py 
+  692  ls
+  693  mv e2s_SRW/retrieve_twiss_parameters_at_location.py  e2s_LATTICES/.
+  694  ls
+  695  ls e2s_LATTICES/
+  696  python E2S.py 
+  697  python ./e2s_LATTICES/retrieve_twiss_parameters_at_location.py ./e2s_LATTICES/VMX.twi  100
+  698  emacs  ./e2s_LATTICES/retrieve_twiss_parameters_at_location.py 
+  699  bg
+  700  ls
+  701  cd e2s_LATTICES/
+  702  ls
+  703  cp retrieve_twiss_parameters_at_location.py  twiss_at_location.py
+  704  emacs twiss_at_location.py 
+  705  bg
+  706  python twiss_at_location.py  VMX.twi  100
+  707  python twiss_at_location.py  VMX.twi  
+  708  python twiss_at_location.py  
+  709  ls retrieve_twiss_parameters_at_location.py 
+  710  cd ../
+  711  python E2S.py 
+  712  pwd
+  713  python E2S.py 
+  714  cp e2s_LATTICES/retrieve_twiss_parameters_at_location.py  . 
+  715  python E2S.py 
+  716  ls
+  717  rm retrieve_twiss_parameters_at_location.py*
+  718  ls
+  719  python E2S.py 
+  720  ls
+  721  ls e2s_SRW/
+  722  history git
+  723  history | grep git
+  724  pwd
+  725  ls
+  726  git commit e2s_LATTICES/ -m "several files added"
+  727  git add e2s_LATTICES/
+  728  git commit e2s_LATTICES/ -m "several files added"
+  729  history | grep git
+  730  git push origin master:work 
+  731  ls
+  732  git show
+  733  git diff
+  734  git commit E2S.py -m "twiss_at_location introduced as function"
+  735  git add E2S.py 
+  736  git commit E2S.py -m "twiss_at_location introduced as function"
+  737  git push E2S.py 
+  738  git push origin master:work
+  739  cd e2s_SRW/
+  740  ls
+  741  history | grep 'python SRWLIB_I13_intensity.py'
+  742  qstat
+  743  pwd
+  744  ls
+  745  cd ../
+  746  ls
+  747  cd e2s_SRW
+  748  ls
+  749  mkdir ANALYSIS
+  750  cd ANALYSIS/
+  751  ls
+  752  pwd
+  753  cd ../
+  754  git commit ANALYSIS/ -m "new directory with files for post-analysis"
+  755  git commit ANALYSIS/ana_intensity.py -m "new directory with files for post-analysis"
+  756  git add ANALYSIS/
+  757  git add ANALYSIS/ana_intensity.py 
+  758  git commit ANALYSIS/ -m "new directory with files for post-analysis"
+  759  git push origin master:work
+  760  ls
+  761  cd ANALYSIS/
+  762  ls
+  763  cd ../
+  764  pwd
+  765  ls
+  766  python
+  767  ls ANALYSIS/
+  768  cd ANALYSIS/
+  769  mkdir __init_.py 
+  770  mkdir __init__.py 
+  771  rmdir   __init_.py
+  772  cd ../
+  773  python
+  774  ls
+  775  cd ANALYSIS/
+  776  ls
+  777  cd ../
+  778  python
+  779  ls
+  780  cd ANALYSIS/
+  781  mkdir foo.py
+  782  cd ../
+  783  python
+  784  emacs ANALYSIS/ana_intensity.py
+  785  bg
+  786  python
+  787  ls 
+  788  ls ANALYSIS/
+  789  python
+  790  cd ANALYSIS/
+  791  ls
+  792  more foo.py
+  793  ll
+  794  rmfir foo.py
+  795  rmdir foo.py
+  796  rmdir __init__.py*
+  797  rm foo.pyc 
+  798  rm __init__.pyc 
+  799  touch __initi__.py
+  800  touch foo.py
+  801  touch __init__.py
+  802  rm __initi__.py 
+  803  cd ../
+  804  python
+  805  cd /dls/physics/students/sug89938/
+  806  ls
+  807  cd SRW_test/
+  808  ls
+  809  cd env/
+  810  ls
+  811  cd work/
+  812  ls
+  813  cd srw_python/
+  814  ls
+  815  python SRWLIB_Example01.py 
+  816  python
+  817  module load python/anaconda
+  818  python SRWLIB_Example01.py 
+  819  module load python/anaconda
+  820  python
+  821  ls
+  822  python SRWLIB_Example01.py 
+  823  python SRWLIB_Example03.py 
+  824  whoami
+  825  ll
+  826  ssh -x sug89938 
+  827  ssh -x sug89938@cs04r-sc-serv-71 
+  828  pwd
+  829  cd ../../../
+  830  pwd
+  831  cd ../../../
+  832  ls
+  833  cd xph53246/source_to_beamline/
+  834  ls
+  835  cd SRW_Dev/env/work/
+  836  ls
+  837  cd   srw_
+  838  cd   srw_python/
+  839  ls
+  840  pwd
+  841  cd ../../
+  842  cd ../
+  843  cd ../SRW_Dev/
+  844  cd env/work/SRW_PROJECT/
+  845  ls
+  846  cd MyBeamline/
+  847  ls
+  848  cp runbatch_Individual.sh SRWLIB_I13d_IndividualElectrons.py   /dls/physics/xph53246/source_to_beamline/E2S/e2s_SRW/
+  849  cp retrieve_twiss_parameters_at_location.py  submit_runbatch_Individual.sh  /dls/physics/xph53246/source_to_beamline/E2S/e2s_SRW/
+  850  cp E2S.py /dls/physics/xph53246/source_to_beamline/E2S/.
+  851  cp retrieve_twiss_parameters_at_location.py  submit_runbatch_Individual.sh  /dls/physics/xph53246/source_to_beamline/E2S/e2s_SRW/history | grep 'python SRWLIB_I13_intensity.py'
+  852  history | grep 'python SRWLIB_I13_intensity.py'
+  853  history | grep 'python SRWLIB_I13'
+  854  cd data_example_08/
+  855  python ana_intensity.py ex08_res_int3.dat 
+  856  bg
+  857  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  858  bg
+  859  python ana_intensity.py ex08_res_int3.dat 
+  860  bg
+  861  ll ex08_res_int3.dat 
+  862  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  863  python ana_intensity.py ex08_res_int3.dat 
+  864  bg
+  865  python ana_intensity.py ex08_res_int2.dat 
+  866  bg
+  867  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  868  bg
+  869  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  870  ls -l ex08_res_int_part_coh1.dat 
+  871  ls -l ex08_res_int3.dat 
+  872  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  873  bg
+  874  python ana_intensity.py ex08_res_int3.dat 
+  875  ll ex08_res_int_part_coh1.dat 
+  876  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  877  bg
+  878  python ana_intensity.py ex08_res_int3.dat 
+  879  bg
+  880  top
+  881  kill 1676
+  882  top
+  883  python ana_intensity.py ex08_res_int3.dat 
+  884  emacs ana_intensity.py 
+  885  bg
+  886  python ana_intensity.py ex08_res_int3.dat 
+  887  more ex08_res_int3.dat 
+  888  python ana_intensity.py ex08_res_int3.dat 
+  889  bg
+  890  python ana_intensity.py ex08_res_int3.dat 
+  891  bg
+  892  more ex08_res_int3.dat 
+  893  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  894  python ana_intensity.py ex08_res_int3.dat 
+  895  more ex08_res_int3.dat 
+  896  python ana_intensity.py ex08_res_int3.dat 
+  897  more ex08_res_int3.dat 
+  898  python ana_intensity.py ex08_res_int3.dat 
+  899  more ex08_res_int3.dat 
+  900  python ana_intensity.py ex08_res_int3.dat 
+  901  more ex08_res_int3.dat 
+  902  python ana_intensity.py ex08_res_int3.dat 
+  903  bg
+  904  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  905  bg
+  906  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  907  python ana_intensity.py ex08_res_int3.dat 
+  908  git commit ana_intensity.py -m 'bug corrected: plot was not properly centred'
+  909  pwd
+  910  cp ana_intensity.py /dls/physics/xph53246/source_to_beamline/E2S/e2s_SRW/ANALYSIS/.
+  911  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  912  qstat
+  913  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  914  bg
+  915  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  916  bg
+  917  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  918  bg
+  919  ls -l  ex08_res_int_part_coh1.dat 
+  920  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  921  bg
+  922  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  923  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  924  python ana_intensity.py ex08_res_int3.dat 
+  925  bg
+  926  python ana_intensity.py ex08_res_int3.dat 
+  927  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  928  ll ex08_res_int_part_coh1.dat
+  929  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  930  more ex08_res_int_part_coh1.dat
+  931  ll ex08_res_int_part_coh1.dat
+  932  more ex08_res_int_part_coh1.dat
+  933  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  934  bg
+  935  python ana_intensity.py ex08_res_int3.dat 
+  936  bg
+  937  qstat
+  938  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  939  bg
+  940  qstat
+  941  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  942  bg
+  943  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  944  bg
+  945  python ana_intensity.py ex08_res_int3.dat 
+  946  ls -l ex08_res_int_part_coh1.dat
+  947  ls -l ex08_res_int3.dat 
+  948  python ana_intensity.py ex08_res_int3.dat 
+  949  bg
+  950  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  951  bg
+  952  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  953  bg
+  954  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  955  bg
+  956  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  957  ls -l ex08_res_int_part_coh1.dat
+  958  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  959  bg 
+  960  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1_Ne5000.dat
+  961  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  962  python ana_intensity.py ex08_res_int_part_coh1_Ne5000.dat 
+  963  mv ex08_res_int_part_coh1_Ne5000.dat ex08_res_int_part_coh1_Ne20000.dat
+  964  python ana_intensity.py ex08_res_int_part_coh1_Ne20000.dat 
+  965  bg
+  966  python ana_intensity.py ex08_res_int3.dat  
+  967  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  968  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1_Ne5000.dat
+  969  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1.dat
+  970  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  971  bg
+  972  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1_Ne100.dat
+  973  python ana_intensity.py ex08_res_int3.dat 
+  974  bg
+  975  python ana_intensity.py ex08_res_int_part_coh1_Ne5000.dat 
+  976  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  977  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1_Ne10.dat
+  978  python ana_intensity.py ex08_res_int_part_coh1_Ne5000.dat 
+  979  python ana_intensity.py ex08_res_int_part_coh1_Ne1000.dat 
+  980  python ana_intensity.py ex08_res_int_part_coh1_Ne500.dat 
+  981  emacs ana_intensity.py 
+  982  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1_Ne1000.dat
+  983  python ana_intensity.py ex08_res_int_part_coh1_Ne1000.dat 
+  984  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1_Ne500.dat
+  985  python ana_intensity.py ex08_res_int_part_coh1_Ne500.dat 
+  986  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1.dat
+  987  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  988  rm ex08_res_int_part_coh1.dat 
+  989  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  990  ls -l ex08_res_int_part_coh1.dat 
+  991  python ana_intensity.py ex08_res_int3.dat 
+  992  bg
+  993  mv ex08_res_int3.dat ex08_res_int3_multiElectron.dat
+  994  python ana_intensity.py ex08_res_int3.dat 
+  995  bg 
+  996  ls -l ex08_res_int_part_coh1.dat 
+  997  python ana_intensity.py ex08_res_int_part_coh1.dat 
+  998  bg
+  999  mv ex08_res_int_part_coh1.dat ex08_res_int_part_coh1_Ne10000.dat 
+ 1000  cd /dls/physics/xph53246/source_to_beamline/E2S/
+ 1001  ls
+ 1002  cd e2s_LATTICES/
+ 1003  more retrieve_twiss_parameters_at_location.py 
+ 1004   
+ 1005  cd ../
+ 1006  ls
+ 1007  git branch
+ 1008  history
+ 1009  history | grep git
+ 1010  git branch
+ 1011  git push origin master:work
+ 1012  history | grep origin
+ 1013  git show origin 
+ 1014  history > history.log 
