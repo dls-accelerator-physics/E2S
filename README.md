@@ -1,5 +1,5 @@
 E2S : electron to sample
-this porject is meant to bridge the gap between AP codes (elegant, AT, ...) used to describe a LATTICE and the
+this project is meant to bridge the gap between AP codes (elegant, AT, ...) used to describe a LATTICE and the
 radiation seen in a BEAMLINE
 
 In this Python version
