@@ -1,56 +1,35 @@
                                                                                   
+&divide_elements
+        name = *,
+        type = "DRIF",
+        maximum_length = 0.01,     
+&end
+
 &run_setup                                                                        
         lattice = VMX.lte,
+        magnets = %s.mag,                                                        
         p_central_mev = 3e3,                                                      
         use_beamline = VMX4D,                                                     
-        default_order = 3,                                                        
-        parameters = %s.param,                                                   
-        final = %s.fin,                                                          
-        magnets = %s.mag,                                                        
-        losses = %s.lost                                                         
+        default_order = 2,                                                                                                                   
 &end                                                                              
-                                                                                                                      
-&aperture_input                                                                                                       
+  
+                                                                                                                    
+!&aperture_input                                                                                                       
         input = /dls/physics/xph53246/DIAMOND/ELEGANT/TEST_BENCH/CHAMBER_REPOSITORY/chamber_1DDBA_cell2_16122013.sdds,
         periodic=0,                                                                                                   
         persistent=0,                                                                                                 
         disable=0,                                                                                                    
-&end                                                                                                                  
+!&end                                                                                                                  
                                     
-&run_control                        
-        n_steps = 1,                
-        n_indices = 0,              
-        n_passes = 1024             
-        reset_rf_for_each_step = 1  
-        first_is_fiducial = 0       
-        restrict_fiducialization = 0
-&end                                
-                                   
-                                                 
-                                                     
-                                                     
-                                                 
+&run_control &end                                
                                                 
 &twiss_output                                   
         filename = %s.twi,                     
+        statistics = 1, 
         radiation_integrals = 1,                
-        matched = 1,                            
-        output_at_each_step = 1,                
-        concat_order = 2                        
-        higher_order_chromaticity = 1           
-        higher_order_chromaticity_range = 0.0002
-        chromatic_tune_spread_half_range = 0    
-        compute_driving_terms = 1               
-        leading_order_driving_terms_only = 1    
-        beta_x = 1                              
-        beta_y = 1                              
-        alpha_x = 0                             
-        alpha_y = 0                             
-        eta_x = 0                               
-        etap_x = 0                              
 &end                                            
                            
-&bunched_beam
+!&bunched_beam
         n_particles_per_bunch = 1
         emit_x = 2.7e-09
         emit_y = 2.7e-11
@@ -68,12 +47,12 @@
         use_twiss_command_values = 0
         distribution_cutoff[0] = 5,5,5,
         centroid[0] = 0,0,0,0,0,0,
-&end
+!&end
 
 
-&track
+!&track
         center_on_orbit=1,
         center_momentum_also=1,
         offset_by_orbit=0,
         offset_momentum_also=0
-&end
+!&end

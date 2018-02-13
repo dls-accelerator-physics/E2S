@@ -1,0 +1,21 @@
+&divide_elements
+        name = *,
+        type = "DRIF",
+        maximum_length = 0.05,     
+&end
+
+
+&run_setup
+    lattice	    = "C1a_RING.lte",
+    magnets         = "%s.mag",
+    use_beamline    = "RINGRF",
+    p_central       = 5870.84,
+    default_order   = 2
+&end
+
+&run_control &end
+
+&twiss_output filename = "%s.twi",
+        statistics=1, radiation_integrals=1,
+&end
+
