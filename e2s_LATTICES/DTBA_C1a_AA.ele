@@ -17,7 +17,15 @@
 &run_control &end
 
 
-&twiss_output filename = "%s.twi",
-        statistics=1, radiation_integrals=1,
+&twiss_output 
+      filename = "%s.twi",
+      statistics=1, 
+      radiation_integrals=1,
+&end
+
+&rf_setup
+        filename      = "%s.rf",
+        harmonic      = 936, 
+        total_voltage = 2.5e+6,
 &end
 
