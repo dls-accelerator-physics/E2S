@@ -18,72 +18,172 @@
 #############################################################################
 
 from __future__ import print_function #Python 2.7 compatibility
-#from srwlib import *
-#from uti_plot import *
 import os
 import sys
 import numpy as np
 
-def twiss_at_location(fichier,locpoint):
+# create paths to subdirectories 
+CWD = os.getcwd()
+e2s_LATTICE = CWD+'/e2s_LATTICE/'
+e2s_SRW     = CWD+'/e2s_SRW/'
+e2s_ELEGANT = CWD+'/e2s_ELEGANT/'
+SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
 
-    import glob
-    import os
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import sys
-    import subprocess
-
-    os.system(' pwd ')
-
-    print('reading the position s argument...')
-    #locpoint=float(sys.argv[2])
-
-    print('position read...')
+sys.path.insert(0, SRWLIB)
+from srwlib import *
+from uti_plot import *
 
 
-###############################################################################
-    def closest(list, Number):
-        aux = []
-        for valor in list:
-            aux.append(abs(Number-valor))
+sys.path.insert(0, e2s_LATTICE)
+sys.path.insert(0, e2s_SRW)
+sys.path.insert(0, e2s_ELEGANT)
 
-        return aux.index(min(aux))
-###############################################################################
+ 
+# now we can import the fucntions 
+from fct_get_twiss_param_at_s_location import GetTwissList
+from fct_get_rf_param                  import GetRF
+from fct_get_SR_param                  import GetCirc
+from fct_get_SR_param                  import DisplayCirc
 
+from fct_get_beam_param_from_twiss     import GetBeamParam
 
-    #fichier=sys.argv[1]
+# def twiss_at_location(fichier,locpoint):
 
-    cmdstring =("sddsprintout -spreadsheet=csv -col=* %s temp_table01234567.csv" %fichier)
-    os.system(cmdstring)
-
-
-    thisdir=os.getcwd()
-
-    df=pd.read_csv(os.path.join(thisdir,'temp_table01234567.csv'))
-    dft=df[['s','betax','alphax','betay','alphay','etax','etaxp','ElementName','ElementType']]
-
-
-    bb=closest(dft['s'],locpoint)
+#     import glob
+#     import os
+#     import pandas as pd
+#     import matplotlib.pyplot as plt
+#     import sys
+#     import subprocess
 
 
-    print("closest s to the given location      : ",dft.loc[bb,'s'])
-    print("index of this value in the twiss file: ", bb)
-    print("betax     :", dft.loc[bb,'betax'])
-    print("alphax    :", dft.loc[bb,'alphax'])
-    print("betay     :", dft.loc[bb,'betay'])
-    print("alphay    :", dft.loc[bb,'alphay'])
-    print("etax     :", dft.loc[bb,'etax'])
-    print("etaxp    :", dft.loc[bb,'etaxp'])
-    print('data retrieved. process completed.')
+#     os.system(' pwd ')
+
+#     print('reading the position s argument...')
+#     #locpoint=float(sys.argv[2])
+
+#     print('position read...')
 
 
-    os.system('rm temp_table01234567.csv')
-    return [dft.loc[bb,'betax'], dft.loc[bb,'alphax'], dft.loc[bb,'betay'], dft.loc[bb,'alphay'], dft.loc[bb,'etax'], dft.loc[bb,'etaxp']]
+# ###############################################################################
+#     def closest(list, Number):
+#         aux = []
+#         for valor in list:
+#             aux.append(abs(Number-valor))
+# 
+#         return aux.index(min(aux))
+# ###############################################################################
 
 
+#     #fichier=sys.argv[1]
 
-LATTICE = 'VMX' 
-ELEdir  = 'e2s_LATTICES/'
+#     cmdstring =("sddsprintout -spreadsheet=csv -col=* %s temp_table01234567.csv" %fichier)
+#     os.system(cmdstring)
+
+
+#     thisdir=os.getcwd()
+
+#     df=pd.read_csv(os.path.join(thisdir,'temp_table01234567.csv'))
+#     dft=df[['s','betax','alphax','betay','alphay','etax','etaxp','ElementName','ElementType']]
+
+
+#     bb=closest(dft['s'],locpoint)
+
+
+#     print("closest s to the given location      : ",dft.loc[bb,'s'])
+#     print("index of this value in the twiss file: ", bb)
+#     print("betax     :", dft.loc[bb,'betax'])
+#     print("alphax    :", dft.loc[bb,'alphax'])
+#     print("betay     :", dft.loc[bb,'betay'])
+#     print("alphay    :", dft.loc[bb,'alphay'])
+#     print("etax     :", dft.loc[bb,'etax'])
+#     print("etaxp    :", dft.loc[bb,'etaxp'])
+#     print('data retrieved. process completed.')
+
+
+#     os.system('rm temp_table01234567.csv')
+#     return [dft.loc[bb,'betax'], dft.loc[bb,'alphax'], dft.loc[bb,'betay'], dft.loc[bb,'alphay'], dft.loc[bb,'etax'], dft.loc[bb,'etaxp']]
+
+
+#
+# read main steering file
+# E2S.input with information about:
+# - ID to process
+#   . ID identification       (e.g. I20)
+#   . Np_und:  n. of periods  (e.g. 
+#   . lam_und: period 
+#   . By_und:  max By
+#   
+# - SR global parameters
+#   . Ee: Beam Energy
+#   . Ib: Beam Current
+#   . Circ: SR length
+#   . Nbunch: n. of bunches
+#
+# - Elegant
+#   . LATTICE: lattice name 
+#
+
+
+# ele_input_filnam = 'ele.input'
+
+INPUT_file = 'E2S.input'
+
+infile     = open(INPUT_file,'r')
+
+
+variables =[]; values=[];
+for line in infile:
+    variable, value = line.split('=')
+    variable = variable.strip()  # remove leading/traling blanks
+    value    = value.strip()
+    variables.append(variable)
+    values.append(value)
+
+infile.close()
+
+dict={}              # create a dictionary for easy access to variables 
+ 
+for i in range(0,len(variables)) :
+    dict[variables[i]] = values[i]
+
+#*********** ID
+By_und  = float(dict['By_und'])
+lam_und = float(dict['lam_und'])
+Np_und  = float(dict['Np_und'])
+K_und   = 0.9338 * By_und * lam_und * 100
+
+#*********** SR Parameters
+Ee      = float(dict['Ee'])
+Ib      = float(dict['Ib'])
+# Circ    = float(dict['Circ'])
+Nbunch  = float(dict['Nbunch'])
+
+#*********** BeamLine Parameters
+slitZ   = float(dict['slitZ'])
+slitDX  = float(dict['slitDX'])
+slitDY  = float(dict['slitDY'])
+Ephot_ini = float(dict['Ephot_ini'])
+Ephot_end = float(dict['Ephot_end'])
+
+#********** Calculation Parameters (SRW)
+outfil    = str(dict['outfil'])
+meshXsta  = float(dict['meshXsta'])
+meshXfin  = float(dict['meshXfin'])
+meshYsta  = float(dict['meshYsta'])
+meshYfin  = float(dict['meshYfin'])
+meshEsta  = float(dict['meshEsta'])
+meshEfin  = float(dict['meshEfin'])
+
+IDname   = str(dict['IDname'])
+LATTICE  = str(dict['LATTICE'])
+calc_type = str(dict['calc_type'])
+
+#LATTICE = 'DTBA_C1a_AA'
+
+LATdir  = 'e2s_LATTICES/'
+SRWdir  = 'e2s_SRW/'
+
 
 # ---------------------------------
 # elegant lattice type: LATTICE.lte 
@@ -95,8 +195,9 @@ eLTE = LATTICE+'.lte'
 # elegant steering file: LATTICE.ele 
 # ----------------------------------
 
-here = os.getcwd() 
-cmd  = here+'/'+ELEdir
+here = os.getcwd() # memorize the TOP directory
+
+cmd  = here+'/'+LATdir  # cd to ELEgant directory 
 os.chdir(cmd)
 eELE = LATTICE+'.ele'
 
@@ -108,22 +209,107 @@ cmd  = 'elegant '+eELE
 os.system(cmd)
 
 eTWI   = LATTICE+'.twi'
+eRF    = LATTICE+'.rf'
+eMAG   = LATTICE+'.mag'
 
-twiss  = twiss_at_location(eTWI, 100)
-betax  = twiss[0]
-alphax = twiss[1]
-betay  = twiss[2]
-alphay = twiss[3]
-etax   = twiss[4]
-etaxp  = twiss[5]
+# ----------------------------------
+# retrieve results from elegant run
+# ----------------------------------
+
+spos = 282.298
+s,sIndex,betax,alphax,betay,alphay,etax,etaxp,ex0,Sdelta0 = GetTwissList(eTWI,spos)
+Sz0  = GetRF(eRF)
+
+Circ = GetCirc(LATTICE)
+
+cou  = 0.01
+beam = GetBeamParam([betax,alphax,betay,alphay,etax,etaxp,ex0,Sdelta0,cou,Sz0])
 
 
-print ('Twiss = ', twiss)
+print("***************************************************************")
+print("***************************************************************")
+print("closest s to the requested location    : ",s)
+print("index of this value in the twiss file  : ", sIndex)
+print("***************************************************************")
+print("***************************************************************")
+print("                                   ")
+print(" Twiss parameters at that location:")
+print(" ----------------------------------")
+print(" betax     :", betax, " (m)")
+print(" alphax    :", alphax)
+print(" betay     :", betay, " (m)")
+print(" alphay    :", alphay)
+print(" etax      :",  etax, " (m)")
+print(" etaxp     :", etaxp)
+
+print(" sx     :", beam[0], " (m)")
+print(" sy     :", beam[1], " (m)")
+print(" sxp    :", beam[2], " (m)")
+print(" syp    :", beam[3], " (m)")
+
+print("                  ")
+print(" Global parameters:")
+print(" ------------------")
+print(" emix       :", ex0)
+print(" dE/E       :", Sdelta0)
+print(" Circ       :", Circ)
+print("                  ")
+print(" sigma_z(0) :", Sz0)
+
+print("                  ")
+print(" ID:")
+print(" ------------------")
+print(" ID name       :", IDname)
+print(" Np_und        :", Np_und)
+
+
+
+
+tgt  = here+'/'+SRWdir
+cmd  = 'cp '+here+'/'+INPUT_file+'  /'+tgt+'/SRW.input'
+os.system(cmd)
+cmd  = tgt
+os.chdir(cmd)
+os.system('echo Circ     = '+str(Circ)+' >> SRW.input\n')
+os.system('echo sig_z    = '+str(Sz0)+' >> SRW.input\n')
+os.system('echo dE       = '+str(Sdelta0)+' >> SRW.input\n')
+os.system('echo -----Beam Twiss/Size:  =  >> SRW.input\n')
+os.system('echo emi_x    = '+str(ex0)+' >> SRW.input\n')
+os.system('echo beta_x   = '+str(betax)+' >> SRW.input\n')
+os.system('echo alpha_x  = '+str(alphax)+' >> SRW.input\n')
+os.system('echo beta_y   = '+str(betay)+' >> SRW.input\n')
+os.system('echo alpha_y  = '+str(alphay)+' >> SRW.input\n')
+os.system('echo eta_x    = '+str(etax)+' >> SRW.input\n')
+os.system('echo eta_xp   = '+str(etaxp)+' >> SRW.input\n')
+os.system('echo sig_x    = '+str(beam[0])+' >> SRW.input\n')
+os.system('echo sig_y    = '+str(beam[1])+' >> SRW.input\n')
+os.system('echo sig_xp   = '+str(beam[2])+' >> SRW.input\n')
+os.system('echo sig_yp   = '+str(beam[3])+' >> SRW.input\n')
+
 cmd  = here
 os.chdir(cmd)
 
+
 # ----------------------------------
-# 
+# Run SRW
 # ----------------------------------
 
+cmd  = here+'/'+SRWdir  # cd to ELEgant directory 
+os.chdir(cmd)
 
+#os.system('python SRW_I13d_individual_electrons.py SRW.input')
+###### os.system('./submit_runbatch_Individual.sh')
+print("Calc Type is "+calc_type)
+if calc_type == 'individual':
+    print("INTENSITY CALCULATION - individual front calculation")
+    os.system('./submit_runbatch_Individual.sh')
+elif calc_type == 'multie':
+    print("INTENSITY CALCULATION - multi-e mode")
+    os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_intensity.py SRW.input')
+elif calc_type == 'flux':
+    print("FLUX CALCULATION")
+    os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_flux.py SRW.input')
+
+
+cmd = here
+os.chdir(cmd)
