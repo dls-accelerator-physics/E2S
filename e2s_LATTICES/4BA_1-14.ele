@@ -1,0 +1,31 @@
+&divide_elements
+        name = *,
+        type = "DRIF",
+        maximum_length = 0.01,     
+&end
+
+
+&run_setup
+    lattice	    = "4BA_1-14.lte",
+    magnets         = "%s.mag",
+    p_central_mev   = 3e3,
+    use_beamline    = "RINGRF",
+    default_order   = 2,
+&end
+
+
+&run_control &end
+
+
+&twiss_output 
+      filename = "%s.twi",
+      statistics=1, 
+      radiation_integrals=1,
+&end
+
+&rf_setup
+        filename      = "%s.rf",
+        harmonic      = 936, 
+        total_voltage = 2.5e+6,
+&end
+
