@@ -1,0 +1,18 @@
+SDDS1
+&parameter name=PhiSynch, type=double, units=deg &end
+&parameter name=Voltage, type=double, units=V &end
+&parameter name=BucketHalfHeight, type=double &end
+&parameter name=nuSynch, type=double &end
+&parameter name=Sz0, type=double, units=m &end
+&parameter name=St0, type=double, units=s &end
+&parameter name=Frequency, type=double, units=Hz &end
+&parameter name=Harmonic, type=long &end
+&data mode=ascii &end
+1.716979e+02
+2.500000e+06
+6.582861e-02
+3.548319e-03
+1.728486e-03
+5.765610e-12
+5.001885e+08
+936

@@ -43,6 +43,10 @@ switch config_name
         twi.filename = 'VMX';
         lattice      = 'VMX.lte'; 
         line         = 'VMX4D';
+    case '4BA'
+        twi.filename = '4BA_1-14';
+        lattice      = '4BA_1-14.lte'; 
+        line         = 'RINGRF';        
     otherwise
         display('no configuration found ...')
 end
@@ -114,7 +118,8 @@ plot(stwi,betax,'b-','LineWidth',3); hold on;
 plot(stwi,betay,'r-','LineWidth',3);
 plot(stwi,etax*100,'Color',[.3 1 .5],'LineWidth',3);
 plot(smag,prof*5,'Color',[.7 .7 .7])
-legend('\beta_x','\beta_y','\eta_x')
+xlabel('S (m)')
+legend('\beta_x (m)','\beta_y (m)','\eta_x (cm)')
 
 figure()
 plot(stwi,alfax,'b-','LineWidth',3); hold on;
