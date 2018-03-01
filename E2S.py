@@ -152,7 +152,7 @@ By_und  = float(dict['By_und'])
 lam_und = float(dict['lam_und'])
 Np_und  = float(dict['Np_und'])
 K_und   = 0.9338 * By_und * lam_und * 100
-
+IDpos    = float(dict['IDpos'])
 #*********** SR Parameters
 Ee      = float(dict['Ee'])
 Ib      = float(dict['Ib'])
@@ -178,7 +178,7 @@ meshEfin  = float(dict['meshEfin'])
 IDname   = str(dict['IDname'])
 LATTICE  = str(dict['LATTICE'])
 calc_type = str(dict['calc_type'])
-
+calc_meth = str(dict['calc_meth'])  # 0 = manual / 1 = undulator / 2 = wiggler 
 #LATTICE = 'DTBA_C1a_AA'
 
 LATdir  = 'e2s_LATTICES/'
@@ -216,8 +216,8 @@ eMAG   = LATTICE+'.mag'
 # retrieve results from elegant run
 # ----------------------------------
 
-spos = 282.298
-s,sIndex,betax,alphax,betay,alphay,etax,etaxp,ex0,Sdelta0 = GetTwissList(eTWI,spos)
+#spos = 282.298
+s,sIndex,betax,alphax,betay,alphay,etax,etaxp,ex0,Sdelta0 = GetTwissList(eTWI,IDpos)
 Sz0  = GetRF(eRF)
 
 Circ = GetCirc(LATTICE)
@@ -285,7 +285,7 @@ os.system('echo sig_x    = '+str(beam[0])+' >> SRW.input\n')
 os.system('echo sig_y    = '+str(beam[1])+' >> SRW.input\n')
 os.system('echo sig_xp   = '+str(beam[2])+' >> SRW.input\n')
 os.system('echo sig_yp   = '+str(beam[3])+' >> SRW.input\n')
-
+os.system('echo calc_meth   = '+str(calc_meth)+' >> SRW.input\n') # 0 =manual / 1 =undulator / 2 =wiggler
 cmd  = here
 os.chdir(cmd)
 
@@ -304,11 +304,12 @@ if calc_type == 'individual':
     print("INTENSITY CALCULATION - individual front calculation")
     os.system('./submit_runbatch_Individual.sh')
 elif calc_type == 'multie':
-    print("INTENSITY CALCULATION - multi-e mode")
+    print("INTENSITY CALCULATION - multi-e mode") 
     os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_intensity.py SRW.input')
 elif calc_type == 'flux':
     print("FLUX CALCULATION")
-    os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_flux.py SRW.input')
+    #os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_flux.py SRW.input')
+    os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_flux.py SRW.input')
 
 
 cmd = here
