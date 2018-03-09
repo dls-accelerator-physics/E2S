@@ -171,9 +171,14 @@ sBx  = 1 #Symmetry of the Horizontal field component vs Longitudinal position
 sBy  = -1 #Symmetry of the Vertical field component vs Longitudinal position
 xcID = 0 #Transverse Coordinates of Undulator Center [m]
 ycID = 0
-zcID = 0. # 0 #Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
-print(zcID)
+zcID = 0.
+-lam_und*Np_und/2*1.055 
+# Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
+# my understanding: you need to calculate from a point outside the undulator
+# e.g. SIREPO fixes a -1.2705m offset for an undulator of 2.409m which 
+# hence: 2.409/2*1.055 = 1.2707
 
+print(zcID)
 
 harmNum = 1 # default=1 for an undulator 
 und = SRWLMagFldU([SRWLMagFldH(harmNum, 'v', By, phBy, sBy, 1), SRWLMagFldH(harmNum, 'h', Bx, phBx, sBx, 1)], undPer, numPer) #Ellipsoidal Undulator
@@ -195,12 +200,12 @@ elecBeam.arStatMom2[1]  = sigXXp
 elecBeam.arStatMom2[2]  = sigXpXp  # (sig_xp)**2 #(27.3666e-06)**2 #<(x'-x'0)^2>
 elecBeam.arStatMom2[3]  = sigYY    #(sig_y)**2  # (15.4091e-06)**2 #<(y-y0)^2>
 elecBeam.arStatMom2[4]  = sigYYp
-elecBeam.arStatMom2[5]  = sigYpYp  # (sig_yp)**2 # (2.90738e-06)**2 #<(y'-y'0)^2>
+elecBeam.arStatMom2[5]  = sigYpYp  #(sig_yp)**2 # (2.90738e-06)**2 #<(y'-y'0)^2>
 elecBeam.arStatMom2[10] = (sigEperE)**2 #<(E-E0)^2>/E0^2
 
 #***********Precision Parameters for SR calculation
 meth = calc_meth # 1 #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"
-relPrec = 0.01 #relative precision
+relPrec = 0.001 #relative precision
 zStartInteg = 0 #longitudinal position to start integration (effective if < zEndInteg)
 zEndInteg = 0 #longitudinal position to finish integration (effective if > zStartInteg)
 npTraj = 20000 #Number of points for trajectory calculation 
