@@ -11,7 +11,7 @@ import sys
 import numpy as np
 import datetime
 
-###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
+#SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
 SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
 
 sys.path.insert(0, SRWLIB)
@@ -57,26 +57,26 @@ lam_und = float(dict['lam_und'])
 Np_und  = float(dict['Np_und'])
 K_und   = 0.9338 * By_und * lam_und * 100
 #***********Beam Parameters
-sig_x    = float(dict['sig_x'])   # 40e-6  # SIREPO TEST "God's eye @ 8088eV"
-sig_y    = float(dict['sig_y'])   # 40e-6 #
-sig_xp   = float(dict['sig_xp'])  # 0.1e-6 #
-sig_yp   = float(dict['sig_yp'])  # 0.1e-6 #
+sig_x   = float(dict['sig_x'])
+sig_y   = float(dict['sig_y'])
+sig_xp  = float(dict['sig_xp'])
+sig_yp  = float(dict['sig_yp'])
 sigXX    = float(dict['sigXX'])   # (40e-6)**2 #
 sigXXp   = float(dict['sigXXp'])  # 0 #
 sigXpXp  = float(dict['sigXpXp']) # (1e-7)**2 #
 sigYY    = float(dict['sigYY'])   # (40e-6)**2 #
 sigYYp   = float(dict['sigYYp'])  # 0 #
 sigYpYp  = float(dict['sigYpYp']) # (1e-7)**2 #
-Ee       = float(dict['Ee'])
-Ib       = float(dict['Ib'])
-sigEperE = float(dict['dE']) # 0.001 # 
-#*********** BeamLine Parameters
+Ee      = float(dict['Ee'])
+Ib      = float(dict['Ib'])
+sigEperE = float(dict['dE'])
+#***********BeamLine Parameters
 slitZ   = float(dict['slitZ'])
 slitDX  = float(dict['slitDX'])
 slitDY  = float(dict['slitDY'])
 Ephot_ini = float(dict['Ephot_ini'])
 Ephot_end = float(dict['Ephot_end'])
-#********** Machine Parameters
+#**********Machine Parameters
 meshXsta  = float(dict['meshXsta'])
 meshXfin  = float(dict['meshXfin'])
 meshYsta  = float(dict['meshYsta'])
@@ -146,10 +146,10 @@ print('+ ----------------------------------------------------------- ')
 strExDataFolderName = outfil # 'data_example_08' #example data sub-folder name
 os.system('[ -d '+outfil+' ] && echo "output directory exists ..." || mkdir '+outfil)
 timestamp = "{:%Y-%b-%d_%H:%M:%S}".format(datetime.datetime.now())
-strIntOutFileName2 =  'single-e__'+outfil+'__'+lattice+'_'+timestamp+'.dat' 
-#the old 'ex08_res_int2.dat' #file name for output SR intensity data
-strIntOutFileName3 = 'multi-e__'+outfil+'__'+lattice+'_'+timestamp+'.dat' 
-#the old 'ex08_res_int3.dat' #file name for output SR intensity data
+
+strIntOutFileNamePartCoh = 'individual-e__'+outfil+'__'+lattice+'_'+timestamp+'.dat' 
+strOpTrFileName = 'ex08_res_op_tr_crl.dat' #file name for output optical transmission data
+strOpPathDifFileName = 'ex08_res_op_path_dif_crl.dat' #file name for optical path difference data
 
 #***********Undulator
 numPer = Np_und # 73 #Number of ID Periods (without counting for terminations
@@ -162,8 +162,8 @@ sBx = 1 #Symmetry of the Horizontal field component vs Longitudinal position
 sBy = -1 #Symmetry of the Vertical field component vs Longitudinal position
 xcID = 0 #Transverse Coordinates of Undulator Center [m]
 ycID = 0
-zcID = -lam_und*Np_und/2*1.055 
-# Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
+zcID = -lam_und*Np_und/2*1.055
+#Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
 # my understanding: you need to calculate from a point outside the undulator
 # e.g. SIREPO fixes a -1.2705m offset for an undulator of 2.409m which 
 # hence: 2.409/2*1.055 = 1.2707
@@ -190,12 +190,12 @@ elecBeam.arStatMom2[5]  = sigYpYp  #(sig_yp)**2 # (2.90738e-06)**2 #<(y'-y'0)^2>
 elecBeam.arStatMom2[10] = (sigEperE)**2 #<(E-E0)^2>/E0^2
 
 #***********Precision Parameters for SR calculation
-meth    = 1 #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"
-relPrec = 0.001 #def = 0.01 relative precision
+meth = 1 #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"
+relPrec = 0.01 #relative precision
 zStartInteg = 0 #longitudinal position to start integration (effective if < zEndInteg)
-zEndInteg   = 0 #longitudinal position to finish integration (effective if > zStartInteg)
-npTraj  = 20000 #Number of points for trajectory calculation 
-useTermin   = 0 #1 #Use "terminating terms" (i.e. asymptotic expansions at zStartInteg and zEndInteg) or not (1 or 0 respectively)
+zEndInteg = 0 #longitudinal position to finish integration (effective if > zStartInteg)
+npTraj = 20000 #Number of points for trajectory calculation 
+useTermin = 0 #1 #Use "terminating terms" (i.e. asymptotic expansions at zStartInteg and zEndInteg) or not (1 or 0 respectively)
 sampFactNxNyForProp = 0.25*2 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, 0]
 
@@ -212,7 +212,7 @@ wfr2.mesh.xStart =  meshXsta/1e6  # meshXsta*1e-6 # -0.00025  # -0.0015 #Initial
 wfr2.mesh.xFin   =  meshXfin/1e6  # meshXfin*1e-6 #0.00025  # 0.0015 #Final Horizontal Position [m]
 wfr2.mesh.yStart =  meshYsta/1e6  # meshYsta*1e-6 #  # -0.0006 #Initial Vertical Position [m]
 wfr2.mesh.yFin   =  meshYfin/1e6  # meshYfin*1e-6 #0.00025  # 0.0006 #Final Vertical Position [m]
-meshInitPartCoh  = deepcopy(wfr2.mesh)
+meshInitPartCoh = deepcopy(wfr2.mesh)
 wfr2.partBeam = elecBeam
 
 #***********Optical Elements and Propagation Parameters
@@ -245,7 +245,7 @@ optApert = SRWLOptA('r', 'a', slitDX*1e-6, slitDY*1e-6) #Aperture
 # propagParApert = [0, 0, 1., 0, 0, 1.5, 1.0, 1.1, 8., 0, 0, 0]
 propagParApert = [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
 propagParLens =  [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
-propagParDrift = [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
+propagParDrift = [0, 0, 1., 1, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
 
 #Wavefront Propagation Parameters:
 #[0]: Auto-Resize (1) or not (0) Before propagation
@@ -264,36 +264,28 @@ propagParDrift = [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
 optBL = SRWLOptC([optApert, optDrift], [propagParApert, propagParDrift]) #"Beamline" - Container of Optical Elements (together with the corresponding wavefront propagation instructions)
 #optBL = SRWLOptC([optApert, optLens, optDrift], [propagParApert, propagParLens, propagParDrift]) #"Beamline" - Container of Optical Elements (together with the corresponding wavefront propagation instructions)
 
-#****************************Calculation (SRWLIB function calls)
-if(srwl_uti_proc_is_master()):
 
-    print('1) Performing Initial Electric Field calculation ... ', end='')
-    arPrecPar[6] = sampFactNxNyForProp #sampling factor for adjusting nx, ny (effective if > 0)
-    srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
-    print('done')
-    print('2) Extracting Intensity from the Calculated Initial Electric Field ... ', end='')
-    arI2 = array('f', [0]*wfr2.mesh.nx*wfr2.mesh.ny) #"flat" array to take 2D intensity data
-    srwl.CalcIntFromElecField(arI2, wfr2, 6, 0, 3, wfr2.mesh.eStart, 0, 0)
-    print('done')
-    print('3) Saving the Initial Electric Field into a file ... ', end='')
-    #AuxSaveIntData(arI2, wfr2.mesh, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileName2))
-    srwl_uti_save_intens_ascii(arI2, wfr2.mesh, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileName2), 0)
-    print('  done')
-
-    print('4) Simulating Electric Field Wavefront Propagation ... ', end='')
-    srwl.PropagElecField(wfr2, optBL)
-    print('  done')
-    print('Extracting Intensity from the Propagated Electric Field  ... ', end='')
-    arI3 = array('f', [0]*wfr2.mesh.nx*wfr2.mesh.ny) #"flat" 2D array to take intensity data
-    # srwl.CalcIntFromElecField(arI3, wfr2, 6, 0, 3, wfr2.mesh.eStart, 0, 0)
-    srwl.CalcIntFromElecField(arI3, wfr2, 6, 1, 3, wfr2.mesh.eStart, 0, 0)
-    print('  done')
-    print('Saving the Propagated Wavefront Intensity data to a file ... ', strIntOutFileName3, end='')
-    #AuxSaveIntData(arI3, wfr2.mesh, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileName3))
-    srwl_uti_save_intens_ascii(arI3, wfr2.mesh, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileName3), 0)
-    print('  done')
+print('Simulating Partially-Coherent Wavefront Propagation by summing-up contributions of SR from individual electrons (takes time)... ')
+#nMacroElec = 50000 #total number of macro-electrons
+nMacroElec = Nelectr 
+#total number of macro-electrons: (old mpiexec was 13m for 50e on 50cores)
+# using openmpi as suggested by M.Furseman
+# 50  cores  3min for 50e / 5:41(4:50) for 100e / 11:05 for 200                 50.5.10
+# 100 cores                                     / 11:03 for 200 (the same?)    100.5.10 
+# 100 cores                       4:40 for 100e / 08:55                       100.10.10
+nMacroElecAvgPerProc = 5 # 5 #number of macro-electrons / wavefront to average on worker processes before sending data to master (for parallel calculation only)
+nMacroElecSavePer = 10 #intermediate data saving periodicity (in macro-electrons)
+srCalcMeth = 1 #SR calculation method
+srCalcPrec = 0.001 #SR calculation rel. accuracy
+radStokesProp = srwl_wfr_emit_prop_multi_e(elecBeam, magFldCnt, meshInitPartCoh, srCalcMeth, srCalcPrec, nMacroElec, nMacroElecAvgPerProc, nMacroElecSavePer, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileNamePartCoh), sampFactNxNyForProp, optBL)
+print('done')
+print('GIRD MESH NX = ',meshInitPartCoh.nx,' NY= ',meshInitPartCoh.ny )
+plotMeshX = [1000*meshInitPartCoh.xStart, 1000*meshInitPartCoh.xFin, meshInitPartCoh.nx]
+plotMeshY = [1000*meshInitPartCoh.yStart, 1000*meshInitPartCoh.yFin, meshInitPartCoh.ny]
+#uti_plot2d(radStokesProp.arS, plotMeshX, plotMeshY, ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Power Density'])
 
 
-
+#uti_plot_show() #show all graphs (blocks script execution; close all graph windows to proceed)
+print('done')
 
  

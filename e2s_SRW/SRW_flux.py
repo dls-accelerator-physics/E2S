@@ -11,7 +11,10 @@ import sys
 import numpy as np
 import datetime
 
-SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
+###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
+SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
+
+
 sys.path.insert(0, SRWLIB)
 from srwlib import *
 from uti_plot import *
@@ -171,8 +174,7 @@ sBx  = 1 #Symmetry of the Horizontal field component vs Longitudinal position
 sBy  = -1 #Symmetry of the Vertical field component vs Longitudinal position
 xcID = 0 #Transverse Coordinates of Undulator Center [m]
 ycID = 0
-zcID = 0.
--lam_und*Np_und/2*1.055 
+zcID = -lam_und*Np_und/2*1.055 
 # Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
 # my understanding: you need to calculate from a point outside the undulator
 # e.g. SIREPO fixes a -1.2705m offset for an undulator of 2.409m which 
