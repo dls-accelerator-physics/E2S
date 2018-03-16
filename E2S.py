@@ -27,7 +27,10 @@ CWD = os.getcwd()
 e2s_LATTICE = CWD+'/e2s_LATTICE/'
 e2s_SRW     = CWD+'/e2s_SRW/'
 e2s_ELEGANT = CWD+'/e2s_ELEGANT/'
+
 SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
+###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
+
 
 sys.path.insert(0, SRWLIB)
 from srwlib import *
