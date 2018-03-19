@@ -36,6 +36,23 @@ def GetBeamParam(tw):
     sxp = np.sqrt( gx*ex + (hxp*dE)**2  )
     syp = np.sqrt( gy*ey )
 
+# -----------------------------------------------------------
+# MA - 07032018 
+# use instead the covariance matrix for the beam envelope 
+# in order to introduce mixed terms 
+# NOTE the term hx * hxp * (dE**2):
+# this is not present in SPECTRA, determining 
+# a different spectrum for cases when a non-zero dispersion
+# is present (e.g. VMX-minibeta+HVF @DI)
+# ----------------------------------------------------------
 
-    beam = [sx, sy, sxp, syp, dE, sz] 
-    return beam
+    sigXX   =  ex * bx + (hx * dE)**2
+    sigXpXp =  ex * gx + (hxp * dE)**2
+    sigXXp  = -ex * ax +  hx  * hxp * (dE**2)
+    sigYY   =  ey * by                                        
+    sigYpYp =  ey * gy                                       
+    sigYYp  = -ey * ay   
+
+    beam = [sx, sy, sxp, syp, dE, sz]
+    mom  = [sigXX, sigXXp, sigXpXp, sigYY, sigYYp, sigYpYp] 
+    return beam, mom 
