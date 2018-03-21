@@ -24,9 +24,10 @@ import numpy as np
 
 # create paths to subdirectories 
 CWD = os.getcwd()
-e2s_LATTICE = CWD+'/e2s_LATTICE/'
-e2s_SRW     = CWD+'/e2s_SRW/'
-e2s_ELEGANT = CWD+'/e2s_ELEGANT/'
+e2s_LATTICE  = CWD+'/e2s_LATTICE/'
+e2s_SRW      = CWD+'/e2s_SRW/'
+e2s_ELEGANT  = CWD+'/e2s_ELEGANT/'
+e2s_BLOPTICS = CWD+'/e2s_BLOPTICS/'
 
 SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
 ###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
@@ -40,6 +41,7 @@ from uti_plot import *
 sys.path.insert(0, e2s_LATTICE)
 sys.path.insert(0, e2s_SRW)
 sys.path.insert(0, e2s_ELEGANT)
+sys.path.insert(0, e2s_BLOPTICS)
 
  
 # now we can import the fucntions 
@@ -75,49 +77,72 @@ def read_input(filin):
     return dict
 
 def e2s(dict):
+
+#
+# get few input parameters for verbose summary ...
+#
     
+#*********** SR (choose the synchrotron radiation generator)
+    SynchRad = str(dict['SynchRad'])
+
 #*********** ID
     By_und  = float(dict['By_und'])
     lam_und = float(dict['lam_und'])
     Np_und  = float(dict['Np_und'])
     K_und   = 0.9338 * By_und * lam_und * 100
     IDpos    = float(dict['IDpos'])
-#*********** SR Parameters
+    IDname   = str(dict['IDname'])
+
+#*********** MACHINE Parameters
     Ee      = float(dict['Ee'])
     Ib      = float(dict['Ib'])
 # Circ    = float(dict['Circ'])
     Nbunch  = float(dict['Nbunch'])
     Cou     = float(dict['Cou'])
-    
-#*********** BeamLine Parameters
-    slitZ   = float(dict['slitZ'])
-    slitDX  = float(dict['slitDX'])
-    slitDY  = float(dict['slitDY'])
-    Ephot_ini = float(dict['Ephot_ini'])
-    Ephot_end = float(dict['Ephot_end'])
-    
-#********** Calculation Parameters (SRW)
-    outfil    = str(dict['outfil'])
-    meshXsta  = float(dict['meshXsta'])
-    meshXfin  = float(dict['meshXfin'])
-    meshYsta  = float(dict['meshYsta'])
-    meshYfin  = float(dict['meshYfin'])
-    meshEsta  = float(dict['meshEsta'])
-    meshEfin  = float(dict['meshEfin'])
-    
-    IDname   = str(dict['IDname'])
     LATTICE  = str(dict['LATTICE'])
+
+#********** Calculation Parameters
     calc_type = str(dict['calc_type'])
-    calc_meth = str(dict['calc_meth'])  # 0 = manual / 1 = undulator / 2 = wiggler 
+    if SynchRad == 'SRW': 
+        calc_meth = str(dict['calc_meth'])  # 0 = manual / 1 = undulator / 2 = wiggler 
+    elif SynchRad == 'SHADOW':
+        sour_type = str(dict['sour_type'])
 
 # ******* Input file name
     INPUT_file = dict['INPUT_file']
-
-
+    
+#    if SynchRad == 'SRW':
+#        print('you have selected SRW ...')
+#*********** BeamLine Parameters
+#        slitZ   = float(dict['slitZ'])
+#        slitDX  = float(dict['slitDX'])
+#        slitDY  = float(dict['slitDY'])
+    Ephot_ini = float(dict['Ephot_ini'])
+    Ephot_end = float(dict['Ephot_end'])
+#********** SRW Calculation Parameters
+#        outfil    = str(dict['outfil'])
+#        meshXsta  = float(dict['meshXsta'])
+#        meshXfin  = float(dict['meshXfin'])
+#        meshYsta  = float(dict['meshYsta'])
+#        meshYfin  = float(dict['meshYfin'])
+#        meshEsta  = float(dict['meshEsta'])
+#        meshEfin  = float(dict['meshEfin'])
+    
+#    elif SynchRad == 'SHADOW':
+#        print('you have selected SHADOW ...')
+#********** SHADOW Beamline Parameters
+#        slitZ   = float(dict['slitZ'])
+#        slitDX  = float(dict['slitDX'])
+#        slitDY  = float(dict['slitDY'])
+#********** SHADOW Calculation Parameters
+#        outfil    = str(dict['outfil'])
+#    else :
+#        print('no synch-rad mode selected ...')
+        
 #LATTICE = 'DTBA_C1a_AA'
     LATdir  = 'e2s_LATTICES/'
     SRWdir  = 'e2s_SRW/'
-    
+    SHAdir  = 'e2s_SHADOW/'
     
     # ---------------------------------
     # elegant lattice type: LATTICE.lte 
@@ -182,9 +207,11 @@ def e2s(dict):
     print("                  ")
     print(" Global parameters:")
     print(" ------------------")
-    print(" emix       :", ex0)
+    print(" Eb         :", Ee, " (GeV)" )
+    print(" Ib         :", Ib, " (A)")
+    print(" emix       :", ex0, " (m)")
     print(" dE/E       :", Sdelta0)
-    print(" Circ       :", Circ)
+    print(" Circ       :", Circ, " (m)")
     print("                  ")
     print(" sigma_z(0) :", Sz0)
     
@@ -195,71 +222,218 @@ def e2s(dict):
     print(" Np_und        :", Np_und)
     
     
-    
-    
-    tgt  = here+'/'+SRWdir
-    cmd  = 'cp '+here+'/'+INPUT_file+'  /'+tgt+'/SRW.input'
-    os.system(cmd)
-    cmd  = tgt
-    os.chdir(cmd)
-    os.system('echo Circ     = '+str(Circ)+' >> SRW.input\n')
-    os.system('echo sig_z    = '+str(Sz0)+' >> SRW.input\n')
-    os.system('echo dE       = '+str(Sdelta0)+' >> SRW.input\n')
-    os.system('echo -----Beam Twiss/Size/Moments:  =  >> SRW.input\n')
-    os.system('echo emi_x    = '+str(ex0)+' >> SRW.input\n')
-    os.system('echo beta_x   = '+str(betax)+' >> SRW.input\n')
-    os.system('echo alpha_x  = '+str(alphax)+' >> SRW.input\n')
-    os.system('echo beta_y   = '+str(betay)+' >> SRW.input\n')
-    os.system('echo alpha_y  = '+str(alphay)+' >> SRW.input\n')
-    os.system('echo eta_x    = '+str(etax)+' >> SRW.input\n')
-    os.system('echo eta_xp   = '+str(etaxp)+' >> SRW.input\n')
-    os.system('echo sig_x    = '+str(beam[0])+' >> SRW.input\n')
-    os.system('echo sig_y    = '+str(beam[1])+' >> SRW.input\n')
-    os.system('echo sig_xp   = '+str(beam[2])+' >> SRW.input\n')
-    os.system('echo sig_yp   = '+str(beam[3])+' >> SRW.input\n')
-    os.system('echo sigXX    = '+str(mom[0])+'  >> SRW.input\n')
-    os.system('echo sigXXp   = '+str(mom[1])+'  >> SRW.input\n')
-    os.system('echo sigXpXp  = '+str(mom[2])+'  >> SRW.input\n')
-    os.system('echo sigYY    = '+str(mom[3])+'  >> SRW.input\n')
-    os.system('echo sigYYp   = '+str(mom[4])+'  >> SRW.input\n')
-    os.system('echo sigYpYp  = '+str(mom[5])+'  >> SRW.input\n')
-    os.system('echo calc_meth   = '+str(calc_meth)+' >> SRW.input\n') # 0 =manual / 1 =undulator / 2 =wiggler
-    cmd  = here
-    os.chdir(cmd)
+    if SynchRad == 'SRW':
+        # ------------------------------
+        # create SRW.input file to steer 
+        # SRW calculation
+        # ------------------------------  
+        tgt  = here+'/'+SRWdir
+        cmd  = 'cp '+here+'/'+INPUT_file+'  /'+tgt+'/SRW.input'
+        os.system(cmd)
+        cmd  = tgt
+        os.chdir(cmd)
+        os.system('echo BLname   = '+str(IDname)+' >> SRW.input\n')
+        os.system('echo Circ     = '+str(Circ)+' >> SRW.input\n')
+        os.system('echo sig_z    = '+str(Sz0)+' >> SRW.input\n')
+        os.system('echo dE       = '+str(Sdelta0)+' >> SRW.input\n')
+        os.system('echo -----Beam Twiss/Size/Moments:  =  >> SRW.input\n')
+        os.system('echo emi_x    = '+str(ex0)+' >> SRW.input\n')
+        os.system('echo beta_x   = '+str(betax)+' >> SRW.input\n')
+        os.system('echo alpha_x  = '+str(alphax)+' >> SRW.input\n')
+        os.system('echo beta_y   = '+str(betay)+' >> SRW.input\n')
+        os.system('echo alpha_y  = '+str(alphay)+' >> SRW.input\n')
+        os.system('echo eta_x    = '+str(etax)+' >> SRW.input\n')
+        os.system('echo eta_xp   = '+str(etaxp)+' >> SRW.input\n')
+        os.system('echo sig_x    = '+str(beam[0])+' >> SRW.input\n')
+        os.system('echo sig_y    = '+str(beam[1])+' >> SRW.input\n')
+        os.system('echo sig_xp   = '+str(beam[2])+' >> SRW.input\n')
+        os.system('echo sig_yp   = '+str(beam[3])+' >> SRW.input\n')
+        os.system('echo sigXX    = '+str(mom[0])+'  >> SRW.input\n')
+        os.system('echo sigXXp   = '+str(mom[1])+'  >> SRW.input\n')
+        os.system('echo sigXpXp  = '+str(mom[2])+'  >> SRW.input\n')
+        os.system('echo sigYY    = '+str(mom[3])+'  >> SRW.input\n')
+        os.system('echo sigYYp   = '+str(mom[4])+'  >> SRW.input\n')
+        os.system('echo sigYpYp  = '+str(mom[5])+'  >> SRW.input\n')
+        os.system('echo calc_meth   = '+str(calc_meth)+' >> SRW.input\n') # 0 =manual / 1 =undulator / 2 =wiggler
+        
+        cmd  = here
+        os.chdir(cmd)
 
-
-    # ----------------------------------
-    # Run SRW
-    # ----------------------------------
+        # ----------------------------------
+        # Run SRW 
+        # ----------------------------------
     
-    cmd  = here+'/'+SRWdir  # cd to ELEgant directory 
-    os.chdir(cmd)
+        cmd  = here+'/'+SRWdir  # cd to ELEgant directory 
+        os.chdir(cmd)
     
 #os.system('python SRW_I13d_individual_electrons.py SRW.input')
 ###### os.system('./submit_runbatch_Individual.sh')
-    print("Calc Type is "+calc_type)
-    if calc_type == 'individual':
-        print("INTENSITY CALCULATION - individual front calculation")
-        os.system('./submit_runbatch_Individual.sh')
-    
-    elif calc_type == 'multie':
-        print("INTENSITY CALCULATION - multi-e mode") 
+        
+        print("Calc Type is "+calc_type)
+        if calc_type == 'individual':
+            print("SRW - INTENSITY CALCULATION - individual front calculation")
+            os.system('./submit_runbatch_Individual.sh')
+            
+        elif calc_type == 'multie':
+            print("SRW - INTENSITY CALCULATION - multi-e mode") 
         #os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_intensity.py SRW.input')
-        os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_intensity.py SRW.input')
-    
-    elif calc_type == 'flux':
-        print("FLUX CALCULATION - interactive mode ... ")
-        os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_flux.py SRW.input')
-    
-    elif calc_type == 'flux_cluster':
-        print("FLUX CALCULATION - using the cluster ... ")
+            os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_intensity.py SRW.input')
+            
+        elif calc_type == 'flux':
+            print("SRW - FLUX CALCULATION - interactive mode ... ")
+            os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_flux.py SRW.input')
+            
+        elif calc_type == 'flux_cluster':
+            print("SRW - FLUX CALCULATION - using the cluster ... ")
     #os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_flux.py SRW.input')
         #### os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_flux.py SRW.input')
-        os.system('./submit_runbatch_Flux.sh')
-    
-        
+            os.system('./submit_runbatch_Flux.sh')
+            
         cmd = here
         os.chdir(cmd)
+
+            
+        
+    elif SynchRad == 'SHADOW':
+        Nrays = float(dict['Nrays'])
+
+        # ------------------------------
+        # create SHA.input file to steer 
+        # SHAdow calculation
+        # ------------------------------  
+        tgt  = here+'/'+SHAdir
+        cmd  = 'cp '+here+'/'+INPUT_file+'  /'+tgt+'/SHA.input'
+        os.system(cmd)
+        cmd  = tgt
+        os.chdir(cmd)
+        #
+        # a) create the source input file        
+        #
+        
+        if sour_type == 'wiggler':
+            print('')
+            os.system('echo epath > SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo '+str(np.ceil(Np_und))+' >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo '+str(lam_und)+' >> SHA_source.input\n')
+            os.system('echo '+str(K_und)+' >> SHA_source.input\n')
+            os.system('echo '+str(Ee)+' >> SHA_source.input\n')
+            os.system('echo 501 >> SHA_source.input\n')
+            os.system('echo 1.0 >> SHA_source.input\n')
+            os.system('echo xshwig.par >> SHA_source.input\n')
+            os.system('echo xshwig.traj >> SHA_source.input\n')
+            os.system('echo nphoton >> SHA_source.input\n')
+            os.system('echo xshwig.traj >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo '+str(Ephot_ini)+' >> SHA_source.input\n')
+            os.system('echo '+str(Ephot_end)+' >> SHA_source.input\n')
+            os.system('echo xshwig.sha >> SHA_source.input\n')
+            os.system('echo input_source >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo 0 >> SHA_source.input\n')
+            os.system('echo '+str(int(Nrays))+' >> SHA_source.input\n')
+            os.system('echo 3398755 >> SHA_source.input\n')
+            os.system('echo 2 >> SHA_source.input\n')
+            os.system('echo xsh_slit_tmp.dat >> SHA_source.input\n')
+            os.system('echo 0 >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo xshwig.sha >> SHA_source.input\n')
+            os.system('echo 100 >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo '+str(beam[0]*100)+' >> SHA_source.input\n')
+            os.system('echo '+str(beam[1]*100)+' >> SHA_source.input\n')
+            os.system('echo '+str(ex0*100)+' >> SHA_source.input\n')
+            os.system('echo 0.0 >> SHA_source.input\n')
+            os.system('echo '+str(ex0*Cou*100)+' >> SHA_source.input\n')
+            os.system('echo 0.0 >> SHA_source.input\n')
+            os.system('echo 3 >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo 1 >> SHA_source.input\n')
+            os.system('echo source >> SHA_source.input\n')
+            os.system('echo systemfile >> SHA_source.input\n')
+            os.system('echo exit >> SHA_source.input\n')
+             
+        elif sour_type =='undulator':
+            print('')
+
+        #
+        # b) create the SHADOW trace file        
+        #
+            
+        os.system('echo trace > SHA_trace.input\n')
+        os.system('echo systemfile >> SHA_trace.input\n')
+        os.system('echo 0 >> SHA_trace.input\n')
+        os.system('echo exit >> SHA_trace.input\n')
+
+        #
+        # c) create the plotxy files (for further analysis)        
+        #
+
+        os.system('echo plotxy > SHA_out.input\n')
+        os.system('echo star.10 >> SHA_out.input\n')
+        os.system('echo 2 >> SHA_out.input\n')
+        os.system('echo ''viva'' >> SHA_out.input\n')
+        os.system('echo 1 >> SHA_out.input\n')
+        os.system('echo 3 >> SHA_out.input\n')
+        os.system('echo 0 >> SHA_out.input\n')
+        os.system('echo 0 >> SHA_out.input\n')
+        os.system('echo 0 >> SHA_out.input\n')
+        os.system('echo 50 >> SHA_out.input\n')
+        os.system('echo 50 >> SHA_out.input\n')
+        os.system('echo exit >> SHA_out.input\n')
+
+
+
+        os.system('echo BLname   = '+str(IDname)+' >> SHA.input\n')
+        os.system('echo Circ     = '+str(Circ)+' >> SHA.input\n')
+        os.system('echo sig_z    = '+str(Sz0)+' >> SHA.input\n')
+        os.system('echo dE       = '+str(Sdelta0)+' >> SHA.input\n')
+        os.system('echo -----Beam Twiss/Size/Moments:  =  >> SHA.input\n')
+        os.system('echo emi_x    = '+str(ex0)+' >> SHA.input\n')
+        os.system('echo beta_x   = '+str(betax)+' >> SHA.input\n')
+        os.system('echo alpha_x  = '+str(alphax)+' >> SHA.input\n')
+        os.system('echo beta_y   = '+str(betay)+' >> SHA.input\n')
+        os.system('echo alpha_y  = '+str(alphay)+' >> SHA.input\n')
+        os.system('echo eta_x    = '+str(etax)+' >> SHA.input\n')
+        os.system('echo eta_xp   = '+str(etaxp)+' >> SHA.input\n')
+        os.system('echo sig_x    = '+str(beam[0])+' >> SHA.input\n')
+        os.system('echo sig_y    = '+str(beam[1])+' >> SHA.input\n')
+        os.system('echo sig_xp   = '+str(beam[2])+' >> SHA.input\n')
+        os.system('echo sig_yp   = '+str(beam[3])+' >> SHA.input\n')
+        os.system('echo sigXX    = '+str(mom[0])+'  >> SHA.input\n')
+        os.system('echo sigXXp   = '+str(mom[1])+'  >> SHA.input\n')
+        os.system('echo sigXpXp  = '+str(mom[2])+'  >> SHA.input\n')
+        os.system('echo sigYY    = '+str(mom[3])+'  >> SHA.input\n')
+        os.system('echo sigYYp   = '+str(mom[4])+'  >> SHA.input\n')
+        os.system('echo sigYpYp  = '+str(mom[5])+'  >> SHA.input\n')
+        #os.system('echo calc_meth   = '+str(calc_meth)+' >> SHA.input\n')
+        
+        cmd  = here
+        os.chdir(cmd)
+        
+        # ----------------------------------
+        # Run SHADOW
+        # ----------------------------------
+    
+        cmd  = here+'/'+SHAdir  # cd to ELEgant directory 
+        os.chdir(cmd)
+  
+        print("Calc Type is "+calc_type)
+ 
+        if calc_type == 'multie':
+            print("SHADOW - INTENSITY CALCULATION - multi-e mode") 
+
+            os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_source.input')
+            os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_trace.input')#I20_SCA_branch.inp
+            os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_out.input')
+            
+            
+        cmd = here
+        os.chdir(cmd)        
         
 
 
