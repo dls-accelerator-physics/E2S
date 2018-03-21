@@ -1,0 +1,100 @@
+#GnuPlot command file for PLOTXY
+#Minimum version: gnuplot 4.2 patchlevel 6
+#
+ 
+                                              
+                                              
+set terminal x11 size 900,600                 
+                                              
+set multiplot                                 
+                                              
+#                                             
+# top histogram                               
+#                                             
+set lmargin screen 0.2125                     
+set rmargin screen 0.70                       
+set bmargin screen 0.75                       
+set tmargin screen 0.90                       
+unset xtics                                   
+unset x2tics                                  
+unset ytics                                   
+unset y2tics                                  
+unset key                                     
+unset xlabel                                  
+unset ylabel                                  
+unset x2label                                 
+unset y2label                                 
+                                              
+set x2tics mirror                             
+set x2label "viva  /dls/physics/xph53246/source_to_beamline/E2S/e2s_SHADOW/star.10"
+ set xrange[  -9.9999999899999997E-002 :   9.9999999899999997E-002 ]
+ set yrange[*:*]
+plot "plotxy_histtop.dat" u 1:2 w lines lt -1 notitle
+                                              
+                                              
+#                                             
+# side histogram                              
+#                                             
+set lmargin screen 0.10                       
+set rmargin screen 0.2125                     
+set bmargin screen 0.10                       
+set tmargin screen 0.75                       
+unset xtics                                   
+unset x2tics                                  
+unset ytics                                   
+unset y2tics                                  
+unset key                                     
+unset xlabel                                  
+unset ylabel                                  
+unset x2label                                 
+unset y2label                                 
+                                              
+set ytics                                     
+set ylabel "Column  3"                         
+                                              
+ set xrange[*:*]
+ set yrange[  -4.9999999900000001E-002 :   4.9999999900000001E-002 ]
+plot "plotxy_histside.dat" u (-$1):2 w lines lt -1 notitle
+                                              
+#                                             
+# scattered/contour plot                      
+#                                             
+set lmargin screen 0.2125                     
+set rmargin screen 0.70                       
+set bmargin screen 0.10                       
+set tmargin screen 0.75                       
+unset xtics                                   
+unset x2tics                                  
+unset ytics                                   
+unset y2tics                                  
+unset key                                     
+unset xlabel                                  
+unset ylabel                                  
+unset x2label                                 
+unset y2label                                 
+                                              
+set xlabel "Column  1"                         
+                                              
+ set xrange[  -9.9999999899999997E-002 :   9.9999999899999997E-002 ]
+ set yrange[  -4.9999999900000001E-002 :   4.9999999900000001E-002 ]
+#                                             
+# IF SCATTER UNCOMMENT THIS                   
+#                                             
+plot "./plotxy_scatter.dat" u 1:2 w d lt -1 notitle
+                                              
+#                                             
+# info column                                 
+#                                             
+set obj 10 rect from graph 1.20, graph 1 to graph 1.61, graph 0 
+set label "xph53246@" at graph 1.21, graph 0.9         
+set label "--ALL RAYS" at graph 1.21, graph 0.5         
+set label "TOT  =    5432" at graph 1.21, graph 0.30         
+set label "LOST =     180" at graph 1.21, graph 0.25        
+set label "GOOD =    5252" at graph 1.21, graph 0.20        
+set label "INTENS =   2782.0" at graph 1.21, graph 0.15        
+set label "WEIGHT: RAYS" at graph 1.21, graph 0.10        
+replot                                        
+                                              
+unset multiplot                               
+                                              
+ pause -1 'Press <Enter> to end graphic '

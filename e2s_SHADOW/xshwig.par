@@ -1,0 +1,16 @@
+ Parameters used for run creating
+ WIGGLER case. Trajectory stored in:
+ xshwig.traj                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+ Number of periods               =           24
+ ------   INPUT    ---------
+ Insertion device  Wavel.  [ m ] =    8.3000000000000004E-002
+ Beam Energy             [ GeV ] =    3.0000000000000000     
+ K                               =    14.803531400000001     
+ Field correction factor         =    1.0000000000000000     
+ ------   OUTPUT    ---------
+ Gamma                           =    5870.8538079942591     
+ Peak Magnetic field   [ Tesla ] =    1.9101452673031674     
+ Fundamental              [ Ev ] =    9.3126766808475967     
+ Fundamental       [ Angstroms ] =    1331.3486247732330     
+ Equivalent SR C.W.     [ Angs ] =    1.0819421444236457     
+               C.E.       [ eV ] =    11459.410292143839     
