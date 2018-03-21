@@ -12,6 +12,7 @@ Ephot_ini = 8700
 Ephot_end = 8700.0996
 slitDX    = 14000.
 slitDY    = 2100.
+RMIRR     = 8.71
 -----SHA-Calculation: =
 meshXsta  = -900.
 meshXfin  =  900.
