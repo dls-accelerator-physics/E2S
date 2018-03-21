@@ -107,6 +107,7 @@ def e2s(dict):
         calc_meth = str(dict['calc_meth'])  # 0 = manual / 1 = undulator / 2 = wiggler 
     elif SynchRad == 'SHADOW':
         sour_type = str(dict['sour_type'])
+        RMIRR     = str(dict['RMIRR']) # radius of cyclindrical mirror after 4-bounche mono (specific of I20SCA)
 
 # ******* Input file name
     INPUT_file = dict['INPUT_file']
@@ -386,7 +387,21 @@ def e2s(dict):
         os.system('echo 50 >> SHA_out.input\n')
         os.system('echo exit >> SHA_out.input\n')
 
+        #
+        # d) modify beamline parameters (action on OE's)
+        #    for now only the radius of M3 (cyl-mirror)
+        #    RMIRR
+        with open('start.07','r') as input_file, open('_start.07','w') as output_file:
+            for line in input_file:
+                L = line.split()[0]
+                if L == 'RMIRR':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+RMIRR+'\n')
+                else:
+                    output_file.write(line)
+        os.system('cp _start.07 start.07')
+                    
 
+        
 
         os.system('echo BLname   = '+str(IDname)+' >> SHA.input\n')
         os.system('echo Circ     = '+str(Circ)+' >> SHA.input\n')
