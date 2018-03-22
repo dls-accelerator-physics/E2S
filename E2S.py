@@ -28,6 +28,8 @@ e2s_LATTICE  = CWD+'/e2s_LATTICE/'
 e2s_SRW      = CWD+'/e2s_SRW/'
 e2s_ELEGANT  = CWD+'/e2s_ELEGANT/'
 e2s_BLOPTICS = CWD+'/e2s_BLOPTICS/'
+e2s_SHADOW   = CWD+'/e2s_SHADOW/'
+
 
 SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
 ###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
@@ -42,6 +44,7 @@ sys.path.insert(0, e2s_LATTICE)
 sys.path.insert(0, e2s_SRW)
 sys.path.insert(0, e2s_ELEGANT)
 sys.path.insert(0, e2s_BLOPTICS)
+sys.path.insert(0, e2s_SHADOW+'/ANALYSIS/')
 
  
 # now we can import the fucntions 
@@ -51,6 +54,8 @@ from fct_get_SR_param                  import GetCirc
 from fct_get_SR_param                  import DisplayCirc
 
 from fct_get_beam_param_from_twiss     import GetBeamParam
+
+from fct_ana_intensity                 import ana_intensity
 
 
 def read_input(filin):
@@ -107,8 +112,10 @@ def e2s(dict):
         calc_meth = str(dict['calc_meth'])  # 0 = manual / 1 = undulator / 2 = wiggler 
     elif SynchRad == 'SHADOW':
         sour_type = str(dict['sour_type'])
-        RMIRR     = str(dict['RMIRR']) # radius of cyclindrical mirror after 4-bounche mono (specific of I20SCA)
-
+        RMIRR     = str(dict['RMIRR']) # radius of cyclindrical mirror after 4-bump mono (specific of I20SCA)
+        AXMAJ     = str(dict['AXMAJ']) # axis-major of the elliptical mirror (I20SCA)
+        AXMIN     = str(dict['AXMIN']) # axis-minor of the elliptical mirror (I20SCA)
+        
 # ******* Input file name
     INPUT_file = dict['INPUT_file']
     
@@ -315,7 +322,7 @@ def e2s(dict):
             print('')
             os.system('echo epath > SHA_source.input\n')
             os.system('echo 1 >> SHA_source.input\n')
-            os.system('echo '+str(np.ceil(Np_und))+' >> SHA_source.input\n')
+            os.system('echo '+str(int(np.ceil(Np_und)))+' >> SHA_source.input\n')
             os.system('echo 1 >> SHA_source.input\n')
             os.system('echo '+str(lam_und)+' >> SHA_source.input\n')
             os.system('echo '+str(K_und)+' >> SHA_source.input\n')
@@ -374,18 +381,31 @@ def e2s(dict):
         # c) create the plotxy files (for further analysis)        
         #
 
-        os.system('echo plotxy > SHA_out.input\n')
-        os.system('echo star.10 >> SHA_out.input\n')
-        os.system('echo 2 >> SHA_out.input\n')
-        os.system('echo ''viva'' >> SHA_out.input\n')
-        os.system('echo 1 >> SHA_out.input\n')
-        os.system('echo 3 >> SHA_out.input\n')
-        os.system('echo 0 >> SHA_out.input\n')
-        os.system('echo 0 >> SHA_out.input\n')
-        os.system('echo 0 >> SHA_out.input\n')
-        os.system('echo 50 >> SHA_out.input\n')
-        os.system('echo 50 >> SHA_out.input\n')
-        os.system('echo exit >> SHA_out.input\n')
+        os.system('echo plotxy > SHA_oe10.input\n')
+        os.system('echo star.10 >> SHA_oe10.input\n')
+        os.system('echo 2 >> SHA_oe10.input\n')
+        os.system('echo ''viva'' >> SHA_oe10.input\n')
+        os.system('echo 1 >> SHA_oe10.input\n')
+        os.system('echo 3 >> SHA_oe10.input\n')
+        os.system('echo 0 >> SHA_oe10.input\n')
+        os.system('echo 0 >> SHA_oe10.input\n')
+        os.system('echo 0 >> SHA_oe10.input\n')
+        os.system('echo 50 >> SHA_oe10.input\n')
+        os.system('echo 50 >> SHA_oe10.input\n')
+        os.system('echo exit >> SHA_oe10.input\n')
+
+        os.system('echo beg_plotxy > SHA_beg.input\n')
+        os.system('echo begin.dat >> SHA_beg.input\n')
+        os.system('echo 2 >> SHA_beg.input\n')
+        os.system('echo ''viva'' >> SHA_beg.input\n')
+        os.system('echo 1 >> SHA_beg.input\n')
+        os.system('echo 3 >> SHA_beg.input\n')
+        os.system('echo 0 >> SHA_beg.input\n')
+        os.system('echo 0 >> SHA_beg.input\n')
+        os.system('echo 0 >> SHA_beg.input\n')
+        os.system('echo 50 >> SHA_beg.input\n')
+        os.system('echo 50 >> SHA_beg.input\n')
+        os.system('echo exit >> SHA_beg.input\n')
 
         #
         # d) modify beamline parameters (action on OE's)
@@ -399,6 +419,16 @@ def e2s(dict):
                 else:
                     output_file.write(line)
         os.system('cp _start.07 start.07')
+        with open('start.08','r') as input_file, open('_start.08','w') as output_file:
+            for line in input_file:
+                L = line.split()[0]
+                if L == 'AXMAJ':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+AXMAJ+'\n')
+                elif L == 'AXMIN':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+AXMIN+'\n')    
+                else:
+                    output_file.write(line)
+        os.system('cp _start.08 start.08')
                     
 
         
@@ -444,9 +474,13 @@ def e2s(dict):
 
             os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_source.input')
             os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_trace.input')#I20_SCA_branch.inp
-            os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_out.input')
             
+            os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_oe10.input')
+            #os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_beg.input')
             
+            aveX, aveY, sigmaX, sigmaY = ana_intensity('plotxy_scatter.dat')
+
+
         cmd = here
         os.chdir(cmd)        
         
