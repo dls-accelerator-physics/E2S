@@ -56,6 +56,8 @@ from fct_get_SR_param                  import DisplayCirc
 from fct_get_beam_param_from_twiss     import GetBeamParam
 
 from fct_ana_intensity                 import ana_intensity
+from fct_ana_intensity                 import ana_intensity_penalty
+
 
 
 def read_input(filin):
@@ -112,9 +114,14 @@ def e2s(dict):
         calc_meth = str(dict['calc_meth'])  # 0 = manual / 1 = undulator / 2 = wiggler 
     elif SynchRad == 'SHADOW':
         sour_type = str(dict['sour_type'])
-        RMIRR     = str(dict['RMIRR']) # radius of cyclindrical mirror after 4-bump mono (specific of I20SCA)
-        AXMAJ     = str(dict['AXMAJ']) # axis-major of the elliptical mirror (I20SCA)
-        AXMIN     = str(dict['AXMIN']) # axis-minor of the elliptical mirror (I20SCA)
+        SSOUR_OE1     = str(dict['SSOUR_OE1']) # distance source-ellipsoidal mirror OE1
+        SIMAG_OE1     = str(dict['SIMAG_OE1']) # distance ellipsoidal mirror - image OE1 (initially 1e+12, this is a collimating mirror)
+        RMIRR_OE7     = str(dict['RMIRR_OE7']) # radius of cyclindrical mirror after 4-bump mono (specific of I20SCA) OE7
+        AXMAJ     = str(dict['AXMAJ']) # axis-major of the elliptical mirror (I20SCA) OE8
+        AXMIN     = str(dict['AXMIN']) # axis-minor of the elliptical mirror (I20SCA) OE8
+        SSOUR_OE8     = str(dict['SSOUR_OE8']) # distance source-ellipsoidal mirror OE8 (initially 1e+12, it recieves from the collimating mirror OE1)
+        SIMAG_OE8     = str(dict['SIMAG_OE8']) # distance ellipsoidal mirror - image OE8 (initially 1e+12, this is a collimating mirror)
+        T_IMAGE_OE10   = str(dict['T_IMAGE_OE10']) # image distance at sample OE10
         
 # ******* Input file name
     INPUT_file = dict['INPUT_file']
@@ -169,7 +176,7 @@ def e2s(dict):
     eELE = LATTICE+'.ele'
     
     # ----------------------------------
-    # RUN elelgant
+    # RUN elegant
     # ----------------------------------
     
     cmd  = 'elegant '+eELE
@@ -315,7 +322,7 @@ def e2s(dict):
         cmd  = tgt
         os.chdir(cmd)
         #
-        # a) create the source input file        
+        # a) create the source input file    --> correspond to wiggler_source.TEMPLATE    
         #
         
         if sour_type == 'wiggler':
@@ -411,25 +418,57 @@ def e2s(dict):
         # d) modify beamline parameters (action on OE's)
         #    for now only the radius of M3 (cyl-mirror)
         #    RMIRR
+        
+        with open('start.01','r') as input_file, open('_start.01','w') as output_file:
+            for line in input_file:
+                L = line.split()[0]
+                if L == 'SSOUR':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+SSOUR_OE1+'\n')
+                elif L == 'SIMAG':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+SIMAG_OE1+'\n')    
+                else:
+                    output_file.write(line)
+        os.system('cp _start.01 start.01')
+            
         with open('start.07','r') as input_file, open('_start.07','w') as output_file:
             for line in input_file:
                 L = line.split()[0]
                 if L == 'RMIRR':
-                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+RMIRR+'\n')
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+RMIRR_OE7+'\n')
                 else:
                     output_file.write(line)
         os.system('cp _start.07 start.07')
+
+#        with open('start.08','r') as input_file, open('_start.08','w') as output_file:
+#            for line in input_file:
+#                L = line.split()[0]
+#                if L == 'AXMAJ':
+#                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+AXMAJ+'\n')
+#                elif L == 'AXMIN':
+#                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+AXMIN+'\n')    
+#                else:
+#                    output_file.write(line)
+#        os.system('cp _start.08 start.08')
+
         with open('start.08','r') as input_file, open('_start.08','w') as output_file:
             for line in input_file:
                 L = line.split()[0]
-                if L == 'AXMAJ':
-                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+AXMAJ+'\n')
-                elif L == 'AXMIN':
-                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+AXMIN+'\n')    
+                if L == 'SSOUR':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+SSOUR_OE8+'\n')
+                elif L == 'SIMAG':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+SIMAG_OE8+'\n')    
                 else:
                     output_file.write(line)
         os.system('cp _start.08 start.08')
                     
+        with open('start.10','r') as input_file, open('_start.10','w') as output_file:
+            for line in input_file:
+                L = line.split()[0]
+                if L == 'T_IMAGE':
+                    output_file.write(line.split()[0]+' '+line.split()[1]+'     '+T_IMAGE_OE10+'\n')
+                else:
+                    output_file.write(line)
+        os.system('cp _start.10 start.10')
 
         
 
@@ -478,8 +517,9 @@ def e2s(dict):
             os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_oe10.input')
             #os.system('/dls_sw/apps/xop/2.4//extensions/shadowvui/shadow3/shadow3 < SHA_beg.input')
             
-            aveX, aveY, sigmaX, sigmaY = ana_intensity('plotxy_scatter.dat')
-
+            #### aveX, aveY, sigmaX, sigmaY = ana_intensity('plotxy_scatter.dat')
+            aveX, aveY, sigmaX, sigmaY, penaltyHorizontal = ana_intensity_penalty('plotxy_scatter.dat')
+            #### aveX, aveY, sigmaX, sigmaY, penaltyHorizontal = ana_intensity_penalty_parab('plotxy_scatter.dat')
 
         cmd = here
         os.chdir(cmd)        
