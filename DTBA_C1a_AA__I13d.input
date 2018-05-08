@@ -27,4 +27,4 @@ LATTICE   = DTBA_C1a_AA
 Ee        = 3.0
 Ib        = 0.3
 Nbunch    = 935
-Cou       = 0.01
+Cou       = 0.1
