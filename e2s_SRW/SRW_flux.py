@@ -11,6 +11,7 @@ import sys
 import numpy as np
 import datetime
 
+
 ###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
 SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
 
@@ -18,6 +19,9 @@ SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018
 sys.path.insert(0, SRWLIB)
 from srwlib import *
 from uti_plot import *
+sys.path.insert(0, '/dls/physics/xph53246/source_to_beamline/E2S/e2s_BLOPTICS')
+from fct_get_BLoptics  import DefineBLOptics
+
 
 print('SRWLIB Python Example # 8:')
 print('Simulating emission and propagation of undulator radiation (UR) wavefront through a simple optical scheme including CRL')
