@@ -132,7 +132,7 @@ Aresc = A # /np.max(A)
 # https://scipython.com/book/chapter-7-matplotlib/examples/a-simple-contour-plot/
 # Reversed Greys colourmap for filled contours
 fig, ax = plt.subplots(nrows=1, ncols=1)
-cpf = ax.contourf(X,Y,Aresc, 5, cmap=cm.hot)
+cpf = ax.contourf(X,Y,Aresc, 40, cmap=cm.hot)
 plt.colorbar(cpf)
 
 # https://scipython.com/book/chapter-7-matplotlib/examples/simple-surface-plots/

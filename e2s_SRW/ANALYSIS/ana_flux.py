@@ -83,8 +83,8 @@ for iE in range(0,epoints):
 
 
 fig, ax = plt.subplots(nrows=1, ncols=1)
-cpf = ax.plot(E,np.log(F))
-
+#cpf = ax.plot(E,np.log(F))
+cpf = ax.plot(E,F)
 
 
 plt.show()
