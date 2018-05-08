@@ -12,6 +12,11 @@
     use_beamline = VMX6D,
     default_order = 2,                                                                                                                   
 &end                                                                              
+!&alter_elements
+        name=Q1B,
+        item=K1,
+        value =<Q1B_K1>,
+!&end
   
 &run_control &end                                
                                                 
