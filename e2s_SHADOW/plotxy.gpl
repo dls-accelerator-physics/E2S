@@ -88,10 +88,10 @@ plot "./plotxy_scatter.dat" u 1:2 w d lt -1 notitle
 set obj 10 rect from graph 1.20, graph 1 to graph 1.61, graph 0 
 set label "xph53246@" at graph 1.21, graph 0.9         
 set label "--ALL RAYS" at graph 1.21, graph 0.5         
-set label "TOT  =    5432" at graph 1.21, graph 0.30         
-set label "LOST =     180" at graph 1.21, graph 0.25        
-set label "GOOD =    5252" at graph 1.21, graph 0.20        
-set label "INTENS =   2782.0" at graph 1.21, graph 0.15        
+set label "TOT  =    4999" at graph 1.21, graph 0.30         
+set label "LOST =     171" at graph 1.21, graph 0.25        
+set label "GOOD =    4828" at graph 1.21, graph 0.20        
+set label "INTENS =   2559.8" at graph 1.21, graph 0.15        
 set label "WEIGHT: RAYS" at graph 1.21, graph 0.10        
 replot                                        
                                               

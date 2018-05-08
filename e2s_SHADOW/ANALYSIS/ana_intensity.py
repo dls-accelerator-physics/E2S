@@ -34,12 +34,24 @@ while True:
         X.append(float(linea.split()[0]))
         Y.append(float(linea.split()[1]))
         W.append(float(linea.split()[2]))
+    
+sigmaX = np.std(X)
+aveX   = np.mean(X) 
+sigmaY = np.std(Y)
+aveY   = np.mean(Y) 
+
+
+print('X = '+str(aveX*10000)+' +/- '+str(sigmaX*10000)+' (um)')
+print('Y = '+str(aveY*10000)+' +/- '+str(sigmaY*10000)+' (um)')
 
 f.close()
 
 fig, ax =  plt.subplots(nrows=1, ncols=1)
+ax.grid()
 cpf     = ax.scatter(X,Y,s=W,alpha=0.5) 
-
+ax.set_xlim([-0.11, 0.11])
+ax.set_ylim([-0.040, 0.015])
+plt.suptitle('RMIRR = 8.79029 cm  AXMAJ = 5205.134 cm  AXMIN = 15.2552 cm')
 
 # Reversed Greys colourmap for filled contours
 #fig, ax = plt.subplots(nrows=1, ncols=1)
