@@ -10,7 +10,7 @@
 # - select ID (e.g. I13d = coherence branch) 
 # - call elegant
 # - extract Twiss parameters at ID
-# - run SRW with these parameters as input
+# - run SRW/SHADOW with these parameters as input
 # - plot the results
 #   1) Flux at Entry Slit
 #   2) intensity image (somewhere down the optical beamline)
@@ -32,7 +32,7 @@ e2s_SHADOW   = CWD+'/e2s_SHADOW/'
 
 
 SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
-###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
+### SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
 
 
 sys.path.insert(0, SRWLIB)
@@ -47,7 +47,7 @@ sys.path.insert(0, e2s_BLOPTICS)
 sys.path.insert(0, e2s_SHADOW+'/ANALYSIS/')
 
  
-# now we can import the fucntions 
+# now we can import the functions 
 from fct_get_twiss_param_at_s_location import GetTwissList
 from fct_get_rf_param                  import GetRF
 from fct_get_SR_param                  import GetCirc
