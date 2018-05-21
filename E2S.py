@@ -31,8 +31,8 @@ e2s_BLOPTICS = CWD+'/e2s_BLOPTICS/'
 e2s_SHADOW   = CWD+'/e2s_SHADOW/'
 
 
-SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
-### SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
+### SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
+SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
 
 
 sys.path.insert(0, SRWLIB)
