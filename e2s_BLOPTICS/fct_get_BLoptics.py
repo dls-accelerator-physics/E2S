@@ -107,18 +107,28 @@ def DefineBLOptics(BLname,slitDX,slitDY):
         #
         # A) define the optical elements
         #
+
+        #
+        # A.1 - drifts
+        # 
         optApertoo    = SRWLOptA('r', 'a', slitDX*1e-3, slitDY*1e-3) # huge aperture, to see the beamspot at entrance 
         optApert      = SRWLOptA('r', 'a', slitDX*1e-6, slitDY*1e-6) # aperture     
         optDrift_mini = SRWLOptD(0.00001)                            # infinitesimal drift
         optDrift_1    = SRWLOptD(9.999)                              # 10m - 1mm drift 
         optDrift_2    = SRWLOptD(21.55)                              # 21.55m drift 
         optDrift_22   = SRWLOptD(4.7)                                # 21.55m drift 
+        optDrift_100  = SRWLOptD(100.0)  
         optDrift_3    = SRWLOptD(100.0-4.7)                          # 100m drift from CRL 
         optDrift_33   = SRWLOptD(187.1-4.7)                          # 182.5m drift from CRL (position of mono) 
         optDrift_4    = SRWLOptD(10)                                 # 10m drift 
         optDrift_44   = SRWLOptD(1)                                  # 1m drift 
+        optDrift_5    = SRWLOptD(10)
+        optDriftKB    = SRWLOptD(2.2)
+        optDrift_KB_Sam = SRWLOptD(6.9)
         optDrift_Sam  = SRWLOptD(10)                                 # 10m drift to sample 
 
+        #
+        # A.2 CRL lens
         # CASE E = 11200 eV
         delta        = 2.712180e-6 #    @11.2keV (SIREPO)
         attenLen     = 12542e-6    #[m] @11.2keV (SIREPO) 
@@ -231,6 +241,27 @@ def DefineBLOptics(BLname,slitDX,slitDY):
         print('   After the two crystals of DCM, the transformation matrix should be close to the unit matrix.')
 
 
+        #
+        # KB1 - elliptical mirror deflecting in the Vertical Plane
+        #
+        tG, sG  = 0.3, 0.3  
+        grazG   = 3e-3 # 1. * np.pi / 180; 
+        #optKB1   = SRWLOptMirEl(_p=34.9, _q=9, _ang_graz=grazG, _r_sag=1.e+23,
+        #                        _size_tang=1, _size_sag=1,
+        #                        _nvx=0, _nvy=cos(grazG), _nvz=-sin(grazG), _tvx=0, _tvy=-sin(grazG))
+        optKB1   = SRWLOptMirEl(_p=30.9, _q=9.1, _ang_graz=grazG, _r_sag=1.e+23,
+                                _size_tang=1, _size_sag=1,
+                                _nvx=0, _nvy=cos(grazG), _nvz=-sin(grazG), _tvx=0, _tvy=-sin(grazG))
+
+        #
+        # KB2 - elliptical mirror deflecting in the Horizontal Plane
+        #
+        tG, sG  = 0.3, 0.3  
+        grazG   = 3e-3 # 1. * np.pi / 180; 
+        optKB2   = SRWLOptMirEl(_p=33.1, _q=6.9, _ang_graz=grazG, _r_sag=1.e+23,
+                                _size_tang=1, _size_sag=1,
+                                _nvx=cos(grazG), _nvy=0, _nvz=-sin(grazG), _tvx=-sin(grazG), _tvy=0)
+        #
         # ------------------------------------
         # B) define the propagation parameters
         # ------------------------------------
@@ -239,6 +270,7 @@ def DefineBLOptics(BLname,slitDX,slitDY):
         propagParDrift =  [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
         propagParM1    =  [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
         propagParCryst =  [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
+        propagParKB    =  [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
 
         #optBL = SRWLOptC([optApertoo, optDrift_mini],   # TEST-0 
         #                 [propagParApert, propagParDrift])               # beam after a very large FE slit 
@@ -247,11 +279,14 @@ def DefineBLOptics(BLname,slitDX,slitDY):
         #optBL = SRWLOptC([optApert, optDrift_mini],   # TEST-1 passed 
         #                 [propagParApert, propagParDrift])             # beam after FE slit 
 
-        optBL = SRWLOptC([optApert, optDrift_1, optCRL, optDrift_3],              # TEST-2 passed   
-                         [propagParApert, propagParDrift, propagParLens, propagParDrift])         # FE slit + CRL 
+        #optBL = SRWLOptC([optApert, optDrift_1, optCRL, optDrift_3],              # TEST-2 passed   
+        #                 [propagParApert, propagParDrift, propagParLens, propagParDrift])         # FE slit + CRL 
 
-        # optBL = SRWLOptC([optApert, optDrift_1, optCRL, optDrift_22, optM1, optDrift_3],   # TEST-3 passed  
+        #optBL = SRWLOptC([optApert, optDrift_1, optCRL, optDrift_22, optM1, optDrift_100],  
         #                 [propagParApert, propagParDrift, propagParLens, propagParDrift])                   # FE slit + CRL + M1 
+
+         #optBL = SRWLOptC([optApert, optDrift_1, optCRL, optDrift_22, optM1, optDrift_3],   # TEST-3 passed  
+          #                [propagParApert, propagParDrift, propagParLens, propagParDrift])                   # FE slit + CRL + M1 
 
 
         #optBL = SRWLOptC([optApert, optDrift_1, optCRL, optDrift_22, optM1, optDrift_33, optCr1, optDrift_4],    
@@ -274,6 +309,15 @@ def DefineBLOptics(BLname,slitDX,slitDY):
 #                         [propagParApert, propagParDrift, propagParLens, propagParDrift, propagParM1, propagParDrift, 
 #                          propagParCryst, propagParCryst, propagParDrift, 
 #                          propagParCryst, propagParCryst, propagParDrift])                                        # FE slit + CRL + M1 + monoC1 + monoC2 + monoC3 + monoC4
+
+        optBL = SRWLOptC([optApert, optDrift_1, optCRL, optDrift_22, optM1, optDrift_33, 
+                          optCr1, optCr2, optDrift_44,
+                          optCr3, optCr4, optDrift_5, optKB1, optDriftKB, optKB2, optDrift_KB_Sam],                                                        
+                         [propagParApert, propagParDrift, propagParLens, propagParDrift, propagParM1, propagParDrift, 
+                          propagParCryst, propagParCryst, propagParDrift, 
+                          propagParCryst, propagParCryst, propagParDrift, 
+                          propagParKB, propagParDrift,propagParKB,propagParDrift])                                        # FE slit + CRL + M1 + monoC1 + monoC2 + monoC3 + monoC4 + KB 
+
         
     if BLname == 'I13d':
         # ----------------------------------------------------------------------
