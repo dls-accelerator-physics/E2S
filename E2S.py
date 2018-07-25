@@ -112,6 +112,7 @@ def e2s(dict):
     calc_type = str(dict['calc_type'])
     if SynchRad == 'SRW': 
         calc_meth = str(dict['calc_meth'])  # 0 = manual / 1 = undulator / 2 = wiggler 
+        Ncores    = float(dict['Ncores'])   # only meaningful for multi-e individual cluster calculations 
     elif SynchRad == 'SHADOW':
         sour_type = str(dict['sour_type'])
         SSOUR_OE1     = str(dict['SSOUR_OE1']) # distance source-ellipsoidal mirror OE1
@@ -285,12 +286,12 @@ def e2s(dict):
 ###### os.system('./submit_runbatch_Individual.sh')
         
         print("Calc Type is "+calc_type)
-        if calc_type == 'individual':
-            print("SRW - INTENSITY CALCULATION - individual front calculation")
-            os.system('./submit_runbatch_Individual.sh')
+        if calc_type == 'multie_from_individual':
+            print("SRW - INTENSITY CALCULATION - front calculation summing up many electrons (partially coherent)")
+            os.system('/dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_individualelectrons.py SRW.input')
             
         elif calc_type == 'multie':
-            print("SRW - INTENSITY CALCULATION - multi-e mode") 
+            print("SRW - INTENSITY CALCULATION - multi-e mode (fully coherent)") 
         #os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_I13d_intensity.py SRW.input')
             os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_intensity.py SRW.input')
             
@@ -304,9 +305,27 @@ def e2s(dict):
         #### os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_flux.py SRW.input')
             os.system('./submit_runbatch_Flux.sh')
             
+        elif calc_type == 'multie_from_individual_cluster':
+            print("SRW - INTENSITY CALCULATION - front calculation summing up many electrons - qsub on the cluster (partially coherent)") 
+            print("creating the submit_runbatch_Individual.sh script ...", str(int(Ncores)))
+            
+            os.system('echo qsub -q ap-high.q -l redhat_release=rhel6 -V -pe openmpi '+str(int(Ncores))+' runbatch_Individual.sh  > qsub_Individual.sh\n')
+#            os.system('./submit_runbatch_Individual.sh')
+            os.system('source ./qsub_Individual.sh')
+        
+        else:
+            print("No calc_type found ... ")
+            print("Try again using on the following cases: ")
+            print("1. flux ")
+            print("2. multie     (coherent) ")
+            print("3. multie_from_individual         (partially coherent) ")
+            print("4. multie_from_individual_cluster (partially coherent) ")
+            
+            
+    
+
         cmd = here
         os.chdir(cmd)
-
             
         
     elif SynchRad == 'SHADOW':
