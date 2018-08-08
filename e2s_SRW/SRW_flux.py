@@ -111,7 +111,7 @@ print('| UNDULATOR PARAMETERS')
 print('| By (T)           = '+str(By_und))
 print('| lambda_u (m)     = '+str(lam_und))
 print('| Np_u             = '+str(Np_und))
-print('| K_max            = '+str(K_und))
+print('| K_und            = '+str(K_und))
 print('+ ----------------------------------------------------------- ')
 print('| BEAMLINE PARAMETERS')
 print('| Z_slit (m)       = '+str(slitZ))
@@ -239,8 +239,11 @@ stkF.mesh.yFin   =  float(dict['slitDY'])/2.0/1.e6 #  0.00006 #final vertical po
 
 print('   Performing Spectral Flux (Stokes parameters) calculation ... ', end='')
 srwl.CalcStokesUR(stkF, elecBeam, und, arPrecF)
-print('   Saving intensity data to file ... ', end='')
+print('   Saving intensity data to file ... '+strExDataFolderName+'/'+strFluxOutFileName+'... ', end='')
 srwl_uti_save_intens_ascii(stkF.arS, stkF.mesh, os.path.join(os.getcwd(), strExDataFolderName, strFluxOutFileName), 0, ['Photon Energy', '', '', 'Flux'], _arUnits=['eV', '', '', 'ph/s/.1%bw'])
+
+
+
 
 print('done')
 ##########################
