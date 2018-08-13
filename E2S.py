@@ -24,7 +24,7 @@ import numpy as np
 
 # create paths to subdirectories 
 CWD = os.getcwd()
-e2s_LATTICE  = CWD+'/e2s_LATTICE/'
+e2s_LATTICES = CWD+'/e2s_LATTICES/'  # typo LATTICE --> LATTICES corrected
 e2s_SRW      = CWD+'/e2s_SRW/'
 e2s_ELEGANT  = CWD+'/e2s_ELEGANT/'
 e2s_BLOPTICS = CWD+'/e2s_BLOPTICS/'
@@ -40,7 +40,7 @@ from srwlib import *
 from uti_plot import *
 
 
-sys.path.insert(0, e2s_LATTICE)
+sys.path.insert(0, e2s_LATTICES)    # typo LATTICE --> LATTICES corrected
 sys.path.insert(0, e2s_SRW)
 sys.path.insert(0, e2s_ELEGANT)
 sys.path.insert(0, e2s_BLOPTICS)
@@ -58,6 +58,7 @@ from fct_get_beam_param_from_twiss     import GetBeamParam
 from fct_ana_intensity                 import ana_intensity
 from fct_ana_intensity                 import ana_intensity_penalty
 
+import fct_photonsPhysics_full as pp  #FBT
 
 
 def read_input(filin):
@@ -99,6 +100,16 @@ def e2s(dict):
     K_und   = 0.9338 * By_und * lam_und * 100
     IDpos    = float(dict['IDpos'])
     IDname   = str(dict['IDname'])
+
+    IDpos_min = float(dict['IDpos_min'])   #FBT
+    IDpos_max = float(dict['IDpos_max'])   #FBT
+    Kmin      = float(dict['Kmin'])            #FBT
+    Kmax      = float(dict['Kmax'])            #FBT
+    KRangeNbPoints = float(dict['KRangeNbPoints'])            #FBT
+    TCPoints  = float(dict['TCPoints'])            #FBT
+    harm_last = float(dict['harm_last'])            #FBT
+    Brightness    = float(dict['Brightness'])
+    TuningCurves  = float(dict['TuningCurves'])
 
 #*********** MACHINE Parameters
     Ee      = float(dict['Ee'])
@@ -322,12 +333,48 @@ def e2s(dict):
             print("4. multie_from_individual_cluster (partially coherent) ")
             
             
-    
+            
 
         cmd = here
         os.chdir(cmd)
+
+        print('Brightness is: ', Brightness)  
+        print('TuningCurves is: ', TuningCurves)  
+        print('Kmin is : ', Kmin)
+        print('Kmax is : ',Kmax)
+        print('KRangeNbPoints is : ', KRangeNbPoints)
+
+        if Brightness ==1:
             
-        
+            # preparatory input for Brightness calculation 
+            # input_twi='DTBA_C1a_AA.twi'
+            input_twi         = e2s_LATTICES+'/'+LATTICE+'.twi'  #'DTBA_C1a_AA.twi'
+            # output_brightness = 'temp999.sdds'
+            output_brightness = 'out_bright.sdds'
+            totalLength       = Np_und * lam_und
+
+            # Now, making the call
+            pp.calc_brightness(input_twi,output_brightness, IDpos,IDpos_min,IDpos_max,harm_last,Kmin,Kmax,KRangeNbPoints,Ib,totalLength,lam_und,Cou,e2s_ELEGANT)
+            kk,Brightness,photonEnergy=pp.plot_brightness(output_brightness)
+
+        if TuningCurves ==1:
+                    
+            # preparatory input for Tuning Curves calculation
+            # input_twi='DTBA_C1a_AA.twi'
+            input_twi            = e2s_LATTICES+'/'+LATTICE+'.twi'  #'DTBA_C1a_AA.twi'
+
+            # output_sddsfluxcurve = 'dmd777.sdds'
+            output_sddsfluxcurve = 'out_tc.sdds'
+   
+            modeCal              = 'density'
+            methodCal            = 'dejus'
+
+            # Now, we can call the function:
+            pp.calc_tuning_curves(input_twi,output_sddsfluxcurve, IDpos,IDpos_min,IDpos_max,modeCal,harm_last,methodCal,Ib,Cou,lam_und,Np_und,Kmin,Kmax,TCPoints,e2s_ELEGANT)
+            
+            #### post-processing: plotting of the tuning curves:            
+            kk,FluxDensity,photonEnergy=pp.plot_tune_curves(output_sddsfluxcurve)
+            
     elif SynchRad == 'SHADOW':
         Nrays = float(dict['Nrays'])
 
@@ -541,7 +588,7 @@ def e2s(dict):
             #### aveX, aveY, sigmaX, sigmaY, penaltyHorizontal = ana_intensity_penalty_parab('plotxy_scatter.dat')
 
         cmd = here
-        os.chdir(cmd)        
+        os.chdir(cmd)
         
 
 
