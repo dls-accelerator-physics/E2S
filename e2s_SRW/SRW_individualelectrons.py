@@ -11,12 +11,16 @@ import sys
 import numpy as np
 import datetime
 
-#SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
+###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
 SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRWLIB/' # MA 12/03/2018 - repository created for pure SRWlib files 
 
 sys.path.insert(0, SRWLIB)
 from srwlib import *
-from uti_plot import *
+from uti_plot import * 
+
+sys.path.insert(0, '/dls/physics/xph53246/source_to_beamline/E2S/e2s_BLOPTICS')
+from fct_get_BLoptics  import DefineBLOptics
+
 
 print('SRWLIB Python Example # 8:')
 print('Simulating emission and propagation of undulator radiation (UR) wavefront through a simple optical scheme including CRL')
@@ -69,13 +73,14 @@ sigYYp   = float(dict['sigYYp'])  # 0 #
 sigYpYp  = float(dict['sigYpYp']) # (1e-7)**2 #
 Ee      = float(dict['Ee'])
 Ib      = float(dict['Ib'])
-sigEperE = float(dict['dE'])
+sigEperE = float(dict['dE']) 
 #***********BeamLine Parameters
 slitZ   = float(dict['slitZ'])
 slitDX  = float(dict['slitDX'])
 slitDY  = float(dict['slitDY'])
 Ephot_ini = float(dict['Ephot_ini'])
 Ephot_end = float(dict['Ephot_end'])
+BLname    = dict['IDname']
 #**********Machine Parameters
 meshXsta  = float(dict['meshXsta'])
 meshXfin  = float(dict['meshXfin'])
@@ -84,6 +89,7 @@ meshYfin  = float(dict['meshYfin'])
 meshEsta  = float(dict['meshEsta'])
 meshEfin  = float(dict['meshEfin'])
 Nelectr   = float(dict['Nelectr'])
+Ncores    = float(dict['Ncores'])   # only meaningful for multi-e individual cluster calculations 
 outfil    = dict['outfil']
 lattice   = dict['LATTICE']
 #***********Extra Undulator Defs for Flux calculation
@@ -133,6 +139,7 @@ print('| Ib       (mA)   = '+str(Ib*1000))
 print('+ ----------------------------------------------------------- ')
 print('| COMPUTATION PARAMETERS')
 print('| Nelectr                   = '+str(Nelectr))
+print('| Ncores                    = '+str(Ncores))
 print('| mesh X start       (um)   = '+str(meshXsta))
 print('| mesh X fin         (um)   = '+str(meshXfin))
 print('| mesh Y start       (um)   = '+str(meshYsta))
@@ -159,10 +166,10 @@ By = By_und # 0.3545 #Peak Vertical field [T]
 phBx = 0 #Initial Phase of the Horizontal field component
 phBy = 0 #Initial Phase of the Vertical field component
 sBx = 1 #Symmetry of the Horizontal field component vs Longitudinal position
-sBy = -1 #Symmetry of the Vertical field component vs Longitudinal position
+sBy = 1 #Symmetry of the Vertical field component vs Longitudinal position
 xcID = 0 #Transverse Coordinates of Undulator Center [m]
 ycID = 0
-zcID = -lam_und*Np_und/2*1.055
+zcID =  -lam_und*Np_und/2-0.05 #-lam_und*Np_und/2*1.055
 #Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
 # my understanding: you need to calculate from a point outside the undulator
 # e.g. SIREPO fixes a -1.2705m offset for an undulator of 2.409m which 
@@ -193,15 +200,16 @@ elecBeam.arStatMom2[10] = (sigEperE)**2 #<(E-E0)^2>/E0^2
 meth = 1 #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"
 relPrec = 0.01 #relative precision
 zStartInteg = 0 #longitudinal position to start integration (effective if < zEndInteg)
-zEndInteg = 0 #longitudinal position to finish integration (effective if > zStartInteg)
-npTraj = 20000 #Number of points for trajectory calculation 
-useTermin = 0 #1 #Use "terminating terms" (i.e. asymptotic expansions at zStartInteg and zEndInteg) or not (1 or 0 respectively)
+zEndInteg   = 0 #longitudinal position to finish integration (effective if > zStartInteg)
+npTraj  = 20000 #Number of points for trajectory calculation 
+useTermin   = 0 #1 #Use "terminating terms" (i.e. asymptotic expansions at zStartInteg and zEndInteg) or not (1 or 0 respectively)
 sampFactNxNyForProp = 0.25*2 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, 0]
 
 #***********Initial Wavefront data placeholder
 wfr2 = SRWLWfr() #For intensity distribution at fixed photon energy
-wfr2.allocate(1, 101, 101) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+#wfr2.allocate(1, 101, 101) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr2.allocate(1, 201, 201) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 #wfr2.mesh.zStart = 36.25 + 1.25 #Longitudinal Position [m] from Center of Straight Section at which SR has to be calculated
 #wfr2.mesh.zStart = 12.9 + 1.25 #Longitudinal Position [m] from Center of Straight Section at which SR has to be calculated
 
@@ -212,58 +220,14 @@ wfr2.mesh.xStart =  meshXsta/1e6  # meshXsta*1e-6 # -0.00025  # -0.0015 #Initial
 wfr2.mesh.xFin   =  meshXfin/1e6  # meshXfin*1e-6 #0.00025  # 0.0015 #Final Horizontal Position [m]
 wfr2.mesh.yStart =  meshYsta/1e6  # meshYsta*1e-6 #  # -0.0006 #Initial Vertical Position [m]
 wfr2.mesh.yFin   =  meshYfin/1e6  # meshYfin*1e-6 #0.00025  # 0.0006 #Final Vertical Position [m]
-meshInitPartCoh = deepcopy(wfr2.mesh)
+meshInitPartCoh  = deepcopy(wfr2.mesh)
 wfr2.partBeam = elecBeam
 
-#***********Optical Elements and Propagation Parameters
-#fx = 1e+23 #Focal Length in Horizontal plane
-#fy = 1e+23 # 19.0939 #Focal Length in Vertical plane
-#optLens = SRWLOptL(fx, fy) #Ideal Lens
+#
+# define the optical beamline 
+#
 
-#delta = 4.3712962E-06 #Refractive index decrement of Be at 8830 eV
-#attenLen = 6946.13E-06 #[m] Attenuation length of Be at 8830 eV
-#geomApertF = 1E-03 #[m] Geometrical aparture of 1D CRL in the Focusing plane
-#geomApertNF = 1E-03 #[m] Geometrical aparture of 1D CRL in the plane where there is no focusing
-#rMin = 0.5E-03 #[m] radius at tip of parabola of CRL
-#nCRL = 3
-#wallThick = 50E-06 #[m] wall thickness of CRL
-
-#optCRL = srwl_opt_setup_CRL(2, delta, attenLen, 1, geomApertNF, geomApertF, rMin, nCRL, wallThick, 0, 0) #1D CRL
-#print('Saving CRL transmission data to files (for viewing/debugging)...', end='')
-#optTrIntCRL = optCRL.get_data(2, 3)
-#srwl_uti_save_intens_ascii(optTrIntCRL, optCRL.mesh, os.path.join(os.getcwd(), strExDataFolderName, strOpTrFileName), 0, ['', 'Horizontal Position', 'Vertical Position', 'Intensity Transmission'], _arUnits=['', 'm', 'm', 'r.u.'])
-
-#optPathDifCRL = optCRL.get_data(3, 3)
-#srwl_uti_save_intens_ascii(optPathDifCRL, optCRL.mesh, os.path.join(os.getcwd(), strExDataFolderName, strOpPathDifFileName), 0, ['', 'Horizontal Position', 'Vertical Position', 'Opt. Path Diff.'], _arUnits=['', 'm', 'm', 'm'])
-#print('done')
-
-optDrift = SRWLOptD(0.1) #Drift space
-optApert = SRWLOptA('r', 'a', slitDX*1e-6, slitDY*1e-6) #Aperture
-
-#optDrift = SRWLOptD(12.9) #Drift space
-
-# propagParApert = [0, 0, 1., 0, 0, 1.5, 1.0, 1.1, 8., 0, 0, 0]
-propagParApert = [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
-propagParLens =  [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
-propagParDrift = [0, 0, 1., 1, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
-
-#Wavefront Propagation Parameters:
-#[0]: Auto-Resize (1) or not (0) Before propagation
-#[1]: Auto-Resize (1) or not (0) After propagation
-#[2]: Relative Precision for propagation with Auto-Resizing (1. is nominal)
-#[3]: Allow (1) or not (0) for semi-analytical treatment of the quadratic (leading) phase terms at the propagation
-#[4]: Do any Resizing on Fourier side, using FFT, (1) or not (0)
-#[5]: Horizontal Range modification factor at Resizing (1. means no modification)
-#[6]: Horizontal Resolution modification factor at Resizing
-#[7]: Vertical Range modification factor at Resizing
-#[8]: Vertical Resolution modification factor at Resizing
-#[9]: Type of wavefront Shift before Resizing (not yet implemented)
-#[10]: New Horizontal wavefront Center position after Shift (not yet implemented)
-#[11]: New Vertical wavefront Center position after Shift (not yet implemented)
-#optBL = SRWLOptC([optApert, optCRL, optDrift], [propagParApert, propagParLens, propagParDrift]) #"Beamline" - Container of Optical Elements (together with the 
-optBL = SRWLOptC([optApert, optDrift], [propagParApert, propagParDrift]) #"Beamline" - Container of Optical Elements (together with the corresponding wavefront propagation instructions)
-#optBL = SRWLOptC([optApert, optLens, optDrift], [propagParApert, propagParLens, propagParDrift]) #"Beamline" - Container of Optical Elements (together with the corresponding wavefront propagation instructions)
-
+optBL = DefineBLOptics(BLname,slitDX,slitDY)
 
 print('Simulating Partially-Coherent Wavefront Propagation by summing-up contributions of SR from individual electrons (takes time)... ')
 #nMacroElec = 50000 #total number of macro-electrons
@@ -274,12 +238,12 @@ nMacroElec = Nelectr
 # 100 cores                                     / 11:03 for 200 (the same?)    100.5.10 
 # 100 cores                       4:40 for 100e / 08:55                       100.10.10
 nMacroElecAvgPerProc = 5 # 5 #number of macro-electrons / wavefront to average on worker processes before sending data to master (for parallel calculation only)
-nMacroElecSavePer = 10 #intermediate data saving periodicity (in macro-electrons)
+nMacroElecSavePer = 5 # 5 intermediate data saving periodicity (in macro-electrons)
 srCalcMeth = 1 #SR calculation method
 srCalcPrec = 0.001 #SR calculation rel. accuracy
 radStokesProp = srwl_wfr_emit_prop_multi_e(elecBeam, magFldCnt, meshInitPartCoh, srCalcMeth, srCalcPrec, nMacroElec, nMacroElecAvgPerProc, nMacroElecSavePer, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileNamePartCoh), sampFactNxNyForProp, optBL)
 print('done')
-print('GIRD MESH NX = ',meshInitPartCoh.nx,' NY= ',meshInitPartCoh.ny )
+print('GRID MESH NX = ',meshInitPartCoh.nx,' NY= ',meshInitPartCoh.ny )
 plotMeshX = [1000*meshInitPartCoh.xStart, 1000*meshInitPartCoh.xFin, meshInitPartCoh.nx]
 plotMeshY = [1000*meshInitPartCoh.yStart, 1000*meshInitPartCoh.yFin, meshInitPartCoh.ny]
 #uti_plot2d(radStokesProp.arS, plotMeshX, plotMeshY, ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Power Density'])
