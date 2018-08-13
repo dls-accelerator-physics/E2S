@@ -89,6 +89,8 @@ meshYfin  = float(dict['meshYfin'])
 meshEsta  = float(dict['meshEsta'])
 meshEfin  = float(dict['meshEfin'])
 Nelectr   = float(dict['Nelectr'])
+calc_meth = int(dict['calc_meth'])
+Ncores    = float(dict['Ncores'])   # only meaningful for multi-e individual cluster calculations 
 outfil    = dict['outfil']
 lattice   = dict['LATTICE']
 #***********Extra Undulator Defs for Flux calculation
@@ -138,6 +140,7 @@ print('| Ib       (mA)   = '+str(Ib*1000))
 print('+ ----------------------------------------------------------- ')
 print('| COMPUTATION PARAMETERS')
 print('| Nelectr                   = '+str(Nelectr))
+print('| Ncores                    = '+str(Ncores))
 print('| mesh X start       (um)   = '+str(meshXsta))
 print('| mesh X fin         (um)   = '+str(meshXfin))
 print('| mesh Y start       (um)   = '+str(meshYsta))
@@ -167,7 +170,7 @@ sBx = 1 #Symmetry of the Horizontal field component vs Longitudinal position
 sBy = 1 #Symmetry of the Vertical field component vs Longitudinal position
 xcID = 0 #Transverse Coordinates of Undulator Center [m]
 ycID = 0
-zcID = -lam_und*Np_und/2*1.055 
+zcID = -lam_und*Np_und/2-0.05 #-lam_und*Np_und/2*1.055 
 # Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
 # my understanding: you need to calculate from a point outside the undulator
 # e.g. SIREPO fixes a -1.2705m offset for an undulator of 2.409m which 
@@ -195,13 +198,13 @@ elecBeam.arStatMom2[5]  = sigYpYp  #(sig_yp)**2 # (2.90738e-06)**2 #<(y'-y'0)^2>
 elecBeam.arStatMom2[10] = (sigEperE)**2 #<(E-E0)^2>/E0^2
 
 #***********Precision Parameters for SR calculation
-meth    = 1 #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"
-relPrec = 0.001 #def = 0.01 relative precision
+meth    = calc_meth  # 1 #SR calculation method: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"
+relPrec = 0.01 #def = 0.01 relative precision
 zStartInteg = 0 #longitudinal position to start integration (effective if < zEndInteg)
 zEndInteg   = 0 #longitudinal position to finish integration (effective if > zStartInteg)
 npTraj  = 20000 #Number of points for trajectory calculation 
 useTermin   = 0 #1 #Use "terminating terms" (i.e. asymptotic expansions at zStartInteg and zEndInteg) or not (1 or 0 respectively)
-sampFactNxNyForProp = 0.25*2 #sampling factor for adjusting nx, ny (effective if > 0)
+sampFactNxNyForProp = 1  # 0.25*2 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, 0]
 
 #***********Initial Wavefront data placeholder
