@@ -111,6 +111,12 @@ def e2s(dict):
     Brightness    = float(dict['Brightness'])
     TuningCurves  = float(dict['TuningCurves'])
 
+#*********** BEAM-shift-tilt at source 
+    delta_x   = float(dict['delta_x']) 
+    delta_y   = float(dict['delta_y']) 
+    delta_xp  = float(dict['delta_xp']) 
+    delta_yp  = float(dict['delta_yp']) 
+    
 #*********** MACHINE Parameters
     Ee      = float(dict['Ee'])
     Ib      = float(dict['Ib'])
@@ -225,11 +231,22 @@ def e2s(dict):
     print(" alphay    :", alphay)
     print(" etax      :",  etax, " (m)")
     print(" etaxp     :", etaxp)
-    
+
     print(" sx     :", beam[0], " (m)")
     print(" sy     :", beam[1], " (m)")
     print(" sxp    :", beam[2], " (m)")
     print(" syp    :", beam[3], " (m)")
+    
+
+    print("                                   ")
+    print(" Shifts/Tilts at source:")
+    print(" ----------------------------------")
+    print(" delta_x   :", delta_x, " (m)")
+    print(" delta_y   :", delta_x, " (m)")
+    print(" delta_xp  :", delta_xp, " (rad)")
+    print(" delta_xp  :", delta_yp, " (rad)")
+
+
     
     print("                  ")
     print(" Global parameters:")
