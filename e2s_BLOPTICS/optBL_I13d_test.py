@@ -27,7 +27,7 @@ def optBL(slitDX, slitDY, Ephot):
     print "| rev. 16/8/2018,  M. Apollonio DLS       " 
     print "+ ------------------------------------- + "
 
-    verba = 0 
+    verba = 0
 
     # --------
     # CRL lens
@@ -60,12 +60,12 @@ def optBL(slitDX, slitDY, Ephot):
         angAsCryst  = 0                                            # Asymmetry angle of each crystal [rad]
     else: 
         Ephot =np.abs(Ephot) # if Ephot < 0 use fixed params 
-        dSpSi111 = 3.1355713563754857                             # Crystal reflecting planes d-spacing for Si(111) crystal
-        psi0rSi111 = -7.757245827e-6; psi0iSi111 = 9.506848329e-8 # Real and imaginary parts of 0-th Fourier component of crystal polarizability
-        psihrSi111 = -4.095903022e-6; psihiSi111 = 6.637430983e-8 # Real and imaginary parts of h-th Fourier component of crystal polarizability
-        psihbrSi111 = psihrSi111; psihbiSi111 = psihiSi111        # Real and imaginary parts of -h-th Fourier component of crystal polarizability
-        thickCryst = 10.e-03                                      # Thickness of each crystal [m]
-        angAsCryst = 0                                            # Asymmetry angle of each crystal [rad]
+        dSpSi111    = 3.1355713563754857                             # Crystal reflecting planes d-spacing for Si(111) crystal
+        psi0rSi111  = -7.757245827e-6; psi0iSi111 = 9.506848329e-8   # Real and imaginary parts of 0-th Fourier component of crystal polarizability
+        psihrSi111  = -4.095903022e-6; psihiSi111 = 6.637430983e-8   # Real and imaginary parts of h-th Fourier component of crystal polarizability
+        psihbrSi111 = psihrSi111; psihbiSi111 = psihiSi111           # Real and imaginary parts of -h-th Fourier component of crystal polarizability
+        thickCryst  = 10.e-03                                        # Thickness of each crystal [m]
+        angAsCryst  = 0                                              # Asymmetry angle of each crystal [rad]
         
         
     dE_error =  0.0 # energy error on the mono
@@ -88,7 +88,7 @@ def optBL(slitDX, slitDY, Ephot):
     optCr_1.set_orient(nCr1[0], nCr1[1], nCr1[2], tCr1[0], tCr1[1])
     orientOutFrCr1 = orientDataCr1[1] #Orientation (coordinates of base vectors) of the output beam frame 
     rxCr1 = orientOutFrCr1[0]; ryCr1 = orientOutFrCr1[1]; rzCr1 = orientOutFrCr1[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
-    if verba == 1:
+    if verba == 11:
         print('   1st crystal output beam frame:'); print('   ex=', rxCr1, 'ey=', ryCr1, 'ez=', rzCr1)
     TrM = [rxCr1, ryCr1, rzCr1] #Input/Output beam transformation matrix (for debugging)
     if verba == 1:
@@ -105,13 +105,13 @@ def optBL(slitDX, slitDY, Ephot):
     orientDataCr2 = optCr_2.find_orient(Ephot+dE_error, _ang_dif_pl= np.pi + np.pi/2) # (GsnBm.avgPhotEn) 
     orientCr2 = orientDataCr2[0] #2nd crystal orientation
     tCr2 = orientCr2[0]; nCr2 = orientCr2[2] # Tangential and Normal vectors to crystal surface
-    if verba == 1:
+    if verba == 2:
         print('   2nd crystal orientation:'); print('   t=', tCr2, 's=', orientCr2[1], 'n=', nCr2)
     #Set crystal orientation:
     optCr_2.set_orient(nCr2[0], nCr2[1], nCr2[2], tCr2[0], tCr2[1])
     orientOutFrCr2 = orientDataCr2[1] #Orientation (coordinates of base vectors) of the output beam frame 
     rxCr2 = orientOutFrCr2[0]; ryCr2 = orientOutFrCr2[1]; rzCr2 = orientOutFrCr2[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
-    if verba == 1:
+    if verba == 22:
         print('   2nd crystal output beam frame:'); print('   ex=', rxCr2, 'ey=', ryCr2, 'ez=', rzCr2)
     TrM = uti_math.matr_prod(TrM, [rxCr2, ryCr2, rzCr2]) #Input/Output beam transformation matrix (for debugging)
     if verba == 1:
@@ -128,13 +128,13 @@ def optBL(slitDX, slitDY, Ephot):
     orientDataCr3 = optCr_3.find_orient(Ephot+dE_error, _ang_dif_pl= + np.pi/2) # (GsnBm.avgPhotEn) 
     orientCr3 = orientDataCr3[0] #3rd crystal orientation
     tCr3 = orientCr3[0]; nCr3 = orientCr3[2] # Tangential and Normal vectors to crystal surface
-    if verba == 1:
+    if verba == 3:
         print('   3rd crystal orientation:'); print('   t=', tCr3, 's=', orientCr3[1], 'n=', nCr3)
     #Set crystal orientation:
     optCr_3.set_orient(nCr3[0], nCr3[1], nCr3[2], tCr3[0], tCr3[1])
     orientOutFrCr3 = orientDataCr3[1] #Orientation (coordinates of base vectors) of the output beam frame 
     rxCr3 = orientOutFrCr3[0]; ryCr3 = orientOutFrCr3[1]; rzCr3 = orientOutFrCr3[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
-    if verba == 1:
+    if verba == 33:
         print('   3rd crystal output beam frame:'); print('   ex=', rxCr3, 'ey=', ryCr3, 'ez=', rzCr3)
     TrM = uti_math.matr_prod(TrM, [rxCr3, ryCr3, rzCr3]) #Input/Output beam transformation matrix (for debugging)
     if verba == 1:
@@ -150,13 +150,13 @@ def optBL(slitDX, slitDY, Ephot):
     orientDataCr4 = optCr_4.find_orient(Ephot+dE_error, _ang_dif_pl= np.pi + np.pi/2) # (GsnBm.avgPhotEn) 
     orientCr4 = orientDataCr4[0] #4th crystal orientation
     tCr4 = orientCr4[0]; nCr4 = orientCr4[2] # Tangential and Normal vectors to crystal surface
-    if verba == 1:
+    if verba == 4:
         print('   4th crystal orientation:'); print('   t=', tCr4, 's=', orientCr4[1], 'n=', nCr4)
     #Set crystal orientation:
     optCr_4.set_orient(nCr4[0], nCr4[1], nCr4[2], tCr4[0], tCr4[1])
     orientOutFrCr4 = orientDataCr4[1] #Orientation (coordinates of base vectors) of the output beam frame 
     rxCr4 = orientOutFrCr4[0]; ryCr4 = orientOutFrCr4[1]; rzCr4 = orientOutFrCr4[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
-    if verba == 1:
+    if verba == 44:
         print('   4th crystal output beam frame:'); print('   ex=', rxCr4, 'ey=', ryCr4, 'ez=', rzCr4)
     TrM = uti_math.matr_prod(TrM, [rxCr4, ryCr4, rzCr4]) #Input/Output beam transformation matrix (for debugging)
     if verba == 1:
@@ -206,7 +206,11 @@ def optBL(slitDX, slitDY, Ephot):
     optDrift_5    = SRWLOptD(D5)
     DKB           = 2.2
     optDrift_KB   = SRWLOptD(DKB)
-    DKBSam        = 6.9
+    DKBSam        = 6.9-.8     #  .1:46/40   0:42/38   -.1: 38/36   -.2:34/34     -.3:30/32 
+                               # -.4:26/30 -.5:22/29   -.6:19/27    -.7:15/25     -.8:11/23 
+                               # -.9:8/22  -1.:5.2/21 -1.1:4.9/19  -1.2:7.3/17.3 -1.3:10.6/16.6
+                               # -1.4:   -2: 14.3/16.7 
+                               # -0.8m selected, brute figures: sx=11um/sy=23.6um, however the central spot is ~10.5um/11.2um 
     optDrift_KB_Sam   = SRWLOptD(DKBSam)
     
     
@@ -214,12 +218,12 @@ def optBL(slitDX, slitDY, Ephot):
     # Propagation Parameters 
     # ----------------------
     
-    propagParApert =  [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
-    propagParLens  =  [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
-    propagParDrift =  [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
-    propagParPM    =  [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
-    propagParCryst =  [0, 0, 1., 1, 0, 1.0, 1.1, 1.0, 1., 0, 0, 0]
-    propagParKB    =  [0, 0, 1., 0, 0, 1.0, 1.0, 1.0, 1., 0, 0, 0]
+    propagParApert =  [0, 0, 1., 0, 0, 1.05, 1.0, 1.05, 1., 0, 0, 0]
+    propagParLens  =  [0, 0, 1., 0, 0, 1.05, 1.0, 1.05, 1., 0, 0, 0]
+    propagParDrift =  [0, 0, 1., 1, 0, 1.2, 1.1, 1.2, 1., 0, 0, 0]
+    propagParPM    =  [0, 0, 1., 1, 0, 1.05, 1.1, 1.05, 1., 0, 0, 0]
+    propagParCryst =  [0, 0, 1., 1, 0, 1.05, 1.1, 1.05, 1., 0, 0, 0]
+    propagParKB    =  [0, 0, 1., 0, 0, 1.05, 1.0, 1.05, 1., 0, 0, 0]
     
     # --------------------------------------------------------------------------
     # Lists of Optical Elements (oe) and Propagation Parameters (pp) are defined
