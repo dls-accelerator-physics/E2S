@@ -8,7 +8,7 @@ from __future__ import print_function #Python 2.7 compatibility
 
 import os
 import sys
-import numpy as np
+#import numpy as np
 import datetime
 
 ###SRWLIB      = '/dls/physics/xph53246/source_to_beamline/SRW_Dev/env/work/SRW_PROJECT/MyBeamline/'
@@ -60,6 +60,11 @@ By_und  = float(dict['By_und'])
 lam_und = float(dict['lam_und'])
 Np_und  = float(dict['Np_und'])
 K_und   = 0.9338 * By_und * lam_und * 100
+#***********Beam Shit/Tilt at source
+delta_x  =  float(dict['delta_x'])
+delta_y  =  float(dict['delta_y'])
+delta_xp =  float(dict['delta_xp'])
+delta_yp =  float(dict['delta_yp'])
 #***********Beam Parameters
 sig_x    = float(dict['sig_x'])   # 40e-6  # SIREPO TEST "God's eye @ 8088eV"
 sig_y    = float(dict['sig_y'])   # 40e-6 #
@@ -127,6 +132,12 @@ print('| sigma_y  (um)    = '+str(sig_y*1e6))
 print('| sigma_yp (urad)  = '+str(sig_yp*1e6))
 print('| dp/p             = '+str(sigEperE))
 print('+ ----------------------------------------------------------- ')
+print('| BEAM SHIFT/TILT @ centre of undulator')
+print('| delta_x (um)    = '+str(delta_x*1e6))
+print('| delta_y (um)    = '+str(delta_y*1e6))
+print('| delta_xp (urad)   = '+str(delta_xp*1e6))
+print('| delta_yp (urad)   = '+str(delta_yp*1e6))
+print('+ ----------------------------------------------------------- ')
 print('| MOMENTS @ centre of undulator')
 print('| sigXX     = '+str(sigXX))
 print('| sigXXp    = '+str(sigXXp))
@@ -170,7 +181,7 @@ sBx = 1 #Symmetry of the Horizontal field component vs Longitudinal position
 sBy = 1 #Symmetry of the Vertical field component vs Longitudinal position
 xcID = 0 #Transverse Coordinates of Undulator Center [m]
 ycID = 0
-zcID = -lam_und*Np_und/2-0.05 #-lam_und*Np_und/2*1.055 
+zcID = 0 #-lam_und*Np_und/2-0.05 #-lam_und*Np_und/2*1.055 
 # Longitudinal Coordinate of Undulator Center wit hrespect to Straight Section Center [m]
 # my understanding: you need to calculate from a point outside the undulator
 # e.g. SIREPO fixes a -1.2705m offset for an undulator of 2.409m which 
@@ -182,11 +193,11 @@ magFldCnt = SRWLMagFldC([und], array('d', [xcID]), array('d', [ycID]), array('d'
 #***********Electron Beam
 elecBeam = SRWLPartBeam()
 elecBeam.Iavg = Ib # 0.1 #Average Current [A]
-elecBeam.partStatMom1.x = 0.00 #Initial Transverse Coordinates (initial Longitudinal Coordinate will be defined later on) [m]
-elecBeam.partStatMom1.y = 0.00
+elecBeam.partStatMom1.x = delta_x # 0.00 #Initial Transverse Coordinates (initial Longitudinal Coordinate will be defined later on) [m]
+elecBeam.partStatMom1.y = delta_y # 0.00
 elecBeam.partStatMom1.z = 0. #-0.5*undPer*(numPer + 4) #Initial Longitudinal Coordinate (set before the ID)
-elecBeam.partStatMom1.xp = 0 #Initial Relative Transverse Velocities
-elecBeam.partStatMom1.yp = 0
+elecBeam.partStatMom1.xp = delta_xp  #Initial Relative Transverse Velocities
+elecBeam.partStatMom1.yp = delta_yp 
 elecBeam.partStatMom1.gamma = Ee/0.51099890221e-03 #Relative Energy
 #2nd order statistical moments
 elecBeam.arStatMom2[0]  = sigXX    # (sig_x)**2 # (5*118.027e-06)**2 #<(x-x0)^2> 
@@ -226,7 +237,7 @@ wfr2.partBeam = elecBeam
 #
 # define the optical beamline 
 #
-
+print(' chosen beamline is   '+BLname)
 optBL = DefineBLOptics(BLname,slitDX,slitDY)
 ### optBL = DefineBLOptics('I13d_ENTRY',slitDX,slitDY) # test 
 
@@ -239,9 +250,10 @@ if(srwl_uti_proc_is_master()):
     print('done')
     print('2) Extracting Intensity from the Calculated Initial Electric Field ... ', end='')
     arI2 = array('f', [0]*wfr2.mesh.nx*wfr2.mesh.ny) #"flat" array to take 2D intensity data
-    srwl.CalcIntFromElecField(arI2, wfr2, 6, 0, 3, wfr2.mesh.eStart, 0, 0)
+    # srwl.CalcIntFromElecField(arI2, wfr2, 6, 0, 3, wfr2.mesh.eStart, 0, 0)
+    srwl.CalcIntFromElecField(arI2, wfr2, 6, 1, 3, wfr2.mesh.eStart, 0, 0)
     print('done')
-    print('3) Saving the Initial Electric Field into a file ... ', end='')
+    print('3) Saving the Intensity from Initial Electric Field into a file ... ', strIntOutFileName2, end='')
     #AuxSaveIntData(arI2, wfr2.mesh, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileName2))
     srwl_uti_save_intens_ascii(arI2, wfr2.mesh, os.path.join(os.getcwd(), strExDataFolderName, strIntOutFileName2), 0)
     print('  done')
