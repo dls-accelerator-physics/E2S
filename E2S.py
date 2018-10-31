@@ -209,12 +209,16 @@ def e2s(dict):
     # ----------------------------------
     
 #spos = 282.298
-    s,sIndex,betax,alphax,betay,alphay,etax,etaxp,ex0,Sdelta0 = GetTwissList(eTWI,IDpos)
+    s,sIndex,betax,alphax,betay,alphay,etax,etaxp,ex0,Sdelta0,pCentral = GetTwissList(eTWI,IDpos)
     Sz0  = GetRF(eRF)
     
+    # rescale emittance / energy spread according to real beam energy assuming optics goes unchanged 
+    ex0     = ex0     * (Ee/pCentral)**2
+    Sdelta0 = Sdelta0 * (Ee/pCentral)
+  
     Circ = GetCirc(LATTICE)
     
-    #cou  = 0.01
+    # cou  = 0.01
     beam, mom = GetBeamParam([betax,alphax,betay,alphay,etax,etaxp,ex0,Sdelta0,Cou,Sz0])
     
 
