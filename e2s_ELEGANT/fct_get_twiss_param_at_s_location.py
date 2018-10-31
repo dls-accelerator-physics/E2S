@@ -54,6 +54,9 @@ def DisplayTwiss(name_of_File,s_loc):
     ex0=float(ex0_temp)
     Sdelta0_temp=subprocess.check_output(['sddsprintout',fichier, '-par=Sdelta0', '-notitle','-nolabel'],stderr= subprocess.STDOUT).decode('UTF-8')
     Sdelta0=float(Sdelta0_temp)  
+    pCentral_temp=subprocess.check_output(['sddsprintout',fichier, '-par=pCentral', '-notitle','-nolabel'],stderr= subprocess.STDOUT).decode('UTF-8') # added, to take into account scaling between source energy and lattice energy
+    m_e = 0.5109989461 
+    pCentral=float(pCentral_temp) * m_e / 1e3  
     print("***************************************************************")
     print("***************************************************************")
     print("closest s to the requested location    : ",dft.loc[bb,'s'])
@@ -74,6 +77,7 @@ def DisplayTwiss(name_of_File,s_loc):
     print(" ------------------")
     print(" the x-emittance ex0 is       :", ex0)
     print(" the energy spread Sdelta0    :", Sdelta0)
+    print(" the e-momentum is            :", pCentral," (GeV/c)")
     print("                  ")
     print("                  ")
     print(' data retrieved. process completed.')
@@ -106,14 +110,17 @@ def GetTwissList(name_of_File,s_loc):
     # is wrong because the emittance and the energy spread are encoded as SDDS parameters and not as column. Therefore they will
     # be extracted using python's subprocess method, below
     #########################################################################################################################
- 
     
     bb=closest(dft['s'],locpoint)
     ex0_temp=subprocess.check_output(['sddsprintout',fichier, '-par=ex0', '-notitle','-nolabel'],stderr= subprocess.STDOUT).decode('UTF-8')
     ex0=float(ex0_temp)
     Sdelta0_temp=subprocess.check_output(['sddsprintout',fichier, '-par=Sdelta0', '-notitle','-nolabel'],stderr= subprocess.STDOUT).decode('UTF-8')
     Sdelta0=float(Sdelta0_temp)
-    return (dft.loc[bb,'s'], bb,dft.loc[bb,'betax'],dft.loc[bb,'alphax'],dft.loc[bb,'betay'],dft.loc[bb,'alphay'],dft.loc[bb,'etax'],dft.loc[bb,'etaxp'],ex0,Sdelta0 )  
+    pCentral_temp=subprocess.check_output(['sddsprintout',fichier, '-par=pCentral', '-notitle','-nolabel'],stderr= subprocess.STDOUT).decode('UTF-8')# added, to take into account scaling between source energy and lattice energy
+    m_e = 0.5109989461
+    pCentral=float(pCentral_temp) * m_e / 1e3
+    print(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>> P (GeV) =",pCentral)
+    return (dft.loc[bb,'s'], bb,dft.loc[bb,'betax'],dft.loc[bb,'alphax'],dft.loc[bb,'betay'],dft.loc[bb,'alphay'],dft.loc[bb,'etax'],dft.loc[bb,'etaxp'],ex0,Sdelta0,pCentral )  # pCentral added [MA 29/10/2018]
     print("finished the retrieval. You can access the data with [],e.eg. ld[0] for s, etc.")
     os.system('rm temp_table01234567.csv')
 #############################################################################################################################################
