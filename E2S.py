@@ -89,7 +89,7 @@ def e2s(dict):
 #
 # get few input parameters for verbose summary ...
 #
-    
+ 
 #*********** SR (choose the synchrotron radiation generator)
     SynchRad = str(dict['SynchRad'])
 
@@ -116,7 +116,11 @@ def e2s(dict):
     delta_y   = float(dict['delta_y']) 
     delta_xp  = float(dict['delta_xp']) 
     delta_yp  = float(dict['delta_yp']) 
-    
+
+#*********** binning for x-y intensity 
+    meshnx       =  int(dict['meshnx']) 
+    meshny       =  int(dict['meshny']) 
+    sampfact     =  float(dict['sampfact']) 
 #*********** MACHINE Parameters
     Ee      = float(dict['Ee'])
     Ib      = float(dict['Ib'])
@@ -249,8 +253,6 @@ def e2s(dict):
     print(" delta_y   :", delta_x, " (m)")
     print(" delta_xp  :", delta_xp, " (rad)")
     print(" delta_xp  :", delta_yp, " (rad)")
-
-
     
     print("                  ")
     print(" Global parameters:")
@@ -344,7 +346,11 @@ def e2s(dict):
             os.system('echo qsub -q ap-high.q -l redhat_release=rhel6 -V -pe openmpi '+str(int(Ncores))+' runbatch_Individual.sh  > qsub_Individual.sh\n')
 #            os.system('./submit_runbatch_Individual.sh')
             os.system('source ./qsub_Individual.sh')
-        
+        elif calc_type == 'power':
+            print("SRW - power density CALCULATION - interactive mode ... ")
+            print(os.getcwd())
+            os.system(' /dls_sw/apps/python/anaconda/1.7.0/64/bin/python SRW_powerdensity.py SRW.input')
+
         else:
             print("No calc_type found ... ")
             print("Try again using on the following cases: ")
